@@ -1,0 +1,31 @@
+.airdrop-bg-gradient-to-b {
+  background: linear-gradient(to bottom, #000000, #1a1a1a, #000000);
+}
+
+.airdrop-text-gradient {
+  color: white;
+}
+
+.airdrop-glow-circle {
+  position: absolute;
+  width: 140px; /* Slightly smaller than the image */
+  height: 140px;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #ff0, 0 0 40px #ff0, 0 0 60px #ff0, 0 0 80px #ff0; /* Yellow glow */
+  background-color: rgba(255, 255, 0, 0.2); /* Light yellow color */
+  z-index: 0;
+}
+
+.airdrop-image-pulse {
+  animation: airdrop-image-pulse 2s infinite; /* Add animation */
+}
+
+@keyframes airdrop-image-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}

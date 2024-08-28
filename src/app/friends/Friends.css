@@ -1,0 +1,102 @@
+.friends-bg-gradient-to-b {
+  background: linear-gradient(to bottom, #1a1a1a, #333);
+}
+
+.friends-gradient-text {
+  background: linear-gradient(to right, #ff7f50, #ffbf00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes friends-glow {
+  from {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+  to {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 1);
+  }
+}
+
+.friends-animate-pulse {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.friends-coin-text {
+  display: flex;
+  align-items: center;
+  font-size: 1rem; 
+}
+
+.friends-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.friends-referral-container {
+  width: 100%;
+  background-color: #222;
+  padding: 1rem;
+  border-radius: 1rem; /* Increased border radius */
+  margin-top: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.friends-referral-container h3 {
+  color: #ffbf00;
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.friends-referral-container p {
+  font-size: 0.875rem; /* 14px */
+  color: #d1d5db; /* Tailwind CSS cool-gray-300 */
+}
+
+.friends-referral-container .friends-claim-button {
+  padding: 0.75rem 1.5rem; /* Increased padding */
+  border-radius: 0.75rem; /* Increased border radius */
+  background-color: #10b981; /* New button color */
+  color: white;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  white-space: nowrap; /* Prevent button from resizing */
+}
+
+.friends-referral-container .friends-claim-button:hover {
+  background-color: #059669; /* Darker shade for hover */
+  transform: scale(1.05);
+}
+
+.friends-referral-container .friends-claimed-button {
+  padding: 0.75rem 1.5rem; /* Increased padding */
+  border-radius: 0.75rem; /* Increased border radius */
+  background-color: #6b7280; /* Greyish background color */
+  color: white;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 600;
+  cursor: not-allowed;
+  white-space: nowrap; /* Prevent button from resizing */
+}
+
+.mb-12 {
+  margin-bottom: 50px;
+}

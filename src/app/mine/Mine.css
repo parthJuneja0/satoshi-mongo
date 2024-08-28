@@ -1,0 +1,290 @@
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background: #384356;
+  border-radius: 16px 16px 0 0;
+}
+
+.card-image {
+  width: 50px;
+  height: 55px;
+  margin-right: 10px;
+}
+
+.tabs button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.tabs button.active,
+.tabs button:hover {
+  background: #272a2f;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
+  transform: scale(1.05);
+}
+
+.mine-content {
+  border-radius: 0 0 46px 46px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 60px;
+}
+
+.mine-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  max-width: 100%;
+}
+
+.mine-card {
+  height: 130px;
+  width: 170px;
+  background: linear-gradient(135deg, #384356 0%, #2c2f36 100%);
+  border-radius: 16px;
+  padding: 10px;
+  text-align: left;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  /* Inner shadow */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-blend-mode: overlay;
+  /* background-image: url('path_to_texture.png');  */
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.mine-card.animals {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.8),
+    /* bright yellow glow */
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
+  /* Inner shadow */
+}
+
+.mine-card.trees {
+  box-shadow: 0 0 20px rgba(34, 197, 61, 0.8),
+    /* green-500 glow */
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
+  /* Inner shadow */
+  background: rgba(34, 197, 94, 0.1);
+  /* light green background */
+  background: linear-gradient(135deg, #384356 0%, #2c2f36 100%);
+  background-blend-mode: overlay;
+}
+
+.mine-card.tools {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+    /* white glow */
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
+  /* Inner shadow */
+  background: rgba(255, 255, 255, 0.1);
+  /* light white background */
+  background: linear-gradient(135deg, #384356 0%, #2c2f36 100%);
+  background-blend-mode: overlay;
+}
+
+.locked_card {
+  height: 130px;
+  width: 170px;
+  background: #171717;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: left;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mine-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.mine-card-header .icon {
+  font-size: 3rem;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.mine-card-separator {
+  height: 1px;
+  background: #fff;
+  opacity: 0.2;
+  margin: 5px 0;
+}
+
+.mine-card-footer {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #fff;
+  position: relative;
+}
+
+.mine-card-footer .footer-icon {
+  margin-right: 5px;
+}
+
+.vertical-separator {
+  width: 1px;
+  height: 36px;
+  background: #fff;
+  opacity: 0.2;
+  margin: 0 10px;
+}
+
+.mine-title {
+  font-size: 1.2rem;
+  color: linear-gradient(to right, #ff7f50, #ffbf00);
+  font-weight: bold;
+}
+
+.profit {
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+
+
+.mine-card:hover {
+  transform: translateY(-10px);
+  /* box-shadow: 0 0 30px rgba(255, 255, 255, 0.6), */
+  /* inset 0 0 10px rgba(0, 0, 0, 0.5);  */
+}
+
+.mine-card:hover .icon {
+  color: #f3ba2f;
+}
+
+.colorful-icon {
+  color: #f39c12;
+}
+
+.bright-coin-icon {
+  color: #ffd700;
+}
+
+.yield-text {
+  font-size: 10px;
+}
+
+.profit-amount {
+  font-size: 0.7rem;
+  color: #ffdd57;
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+}
+
+@media (max-width: 768px) {
+  .yield-text {
+    font-size: 10px;
+  }
+
+  .card-image {
+    width: 50px;
+    height: 55px;
+    margin-right: 10px;
+  }
+
+  .profit-amount {
+    font-size: 0.7rem;
+    color: #ffdd57;
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+  }
+
+  .mine-card-grid {
+    gap: 15px;
+  }
+
+  .mine-card {
+    padding: 10px;
+  }
+
+  .mine-card-header .icon {
+    font-size: 2.5rem;
+    margin-right: 8px;
+  }
+
+  .mine-title {
+    font-size: 1.1rem;
+    color: linear-gradient(to right, #ff7f50, #ffbf00);
+  }
+
+  .profit {
+    font-size: 0.8rem;
+  }
+
+
+}
+
+@media (max-width: 480px) {
+  .mine-card-grid {
+    gap: 10px;
+  }
+
+  .card-image {
+    width: 50px;
+    height: 55px;
+    margin-right: 10px;
+  }
+
+  .tabs button {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+
+  .mine-card {
+    padding: 10px;
+  }
+
+  .locked_card {
+    padding: 10px;
+  }
+
+  .mine-card-header .icon {
+    font-size: 2rem;
+    margin-right: 6px;
+  }
+
+  .mine-title {
+    font-size: 1rem;
+    color: linear-gradient(to right, #ff7f50, #ffbf00);
+  }
+
+  .profit {
+    font-size: 0.7rem;
+  }
+
+
+  .yield-text {
+    font-size: 10px;
+  }
+
+  .profit-amount {
+    font-size: 0.7em;
+    color: #ffdd57;
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+  }
+}
