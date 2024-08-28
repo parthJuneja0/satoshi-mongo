@@ -8,6 +8,7 @@ const BuyConfirmationModal = ({
   onConfirm,
   card,
   balaceSufficient,
+  getCardById,
 }) => {
   const { unlockedCards } = useContext(cardsContext);
   if (!show) return null;
@@ -25,7 +26,7 @@ const BuyConfirmationModal = ({
         <div className="confirm-modal-body">
           <p>
             Are you sure you want to buy <strong>{card.title}</strong> for{" "}
-            <strong>{unlockedCards[card.cardId].price}</strong> {card.reqUtil}?
+            <strong>{getCardById(card.cardId).price}</strong> {card.reqUtil}?
           </p>
         </div>
         <div className="confirm-modal-footer">

@@ -1,27 +1,30 @@
 import { UnlockedCards } from "@/lib/models/unlockedcards";
 import { NextResponse } from "next/server";
 
-export async function PUT(req) {
+export async function PATCH(req) {
+    const { user, cardId, profitAmount, price } = await req.json();
+
+    const newCard = {
+        cardId,
+        level: 1,
+        profitAmount,
+        price
+    };
+
     try {
-        // const { telegramId, cardId, profitAmount, price, } = await req.json();
-        const { telegramId, cards } = await req.json();
-        const cardsDoc = await UnlockedCards.findOne({ user: telegramId });
-        // console.log(cardsDoc.cards[cardId]);
-        // if (!cardsDoc.cards[cardId]) {
-        //     cardsDoc.cards[cardId] = {};
-        // }
-        // console.log(cardsDoc.cards[cardId]);
+        const updatedDoc = await UnlockedCards.findOneAndUpdate(
+            { user },
+            { $push: { cards: newCard } },
+            { new: true }
+        );
 
-        // cardsDoc.cards[cardId] = { level: 1, profitAmount, price };
-        cardsDoc.cards = cards;
+        if (!updatedDoc) {
+            return NextResponse.json({ error: 'Document not found' }, { status: 404 });
+        }
 
-        // console.log(cardsDoc.cards[cardId]);
-
-        await cardsDoc.save()
-
-        return NextResponse.json({ cards: "savedCardsDoc.cards" });
+        return NextResponse.json({ doc: updatedDoc });
     } catch (error) {
-        console.log(error);
-        return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
+        console.error(error);
+        return NextResponse.json({ error: 'Failed to update document' }, { status: 500 });
     }
 }

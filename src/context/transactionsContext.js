@@ -16,7 +16,7 @@ export const TransactionsProvider = ({ children }) => {
     }
 
     const cardUpgrade = async (telegramId, cardId, utilToRemove, util, yieldPerHourToAdd, newProfitAmount, newPrice,) => {
-        const response = await axios.put("/api/transactions/cardUpgrade", {
+        const response = await axios.patch("/api/transactions/cardUpgrade", {
             telegramId,
             cardId,
             utilToRemove,
@@ -29,8 +29,8 @@ export const TransactionsProvider = ({ children }) => {
     }
 
     const unlockNewCard = async (telegramId, cardId, profitAmount, price) => {
-        const response = await axios.put("/api/transactions/unlockNewCard", {
-            telegramId,
+        const response = await axios.patch("/api/transactions/unlockNewCard", {
+            user: telegramId,
             cardId,
             profitAmount,
             price,

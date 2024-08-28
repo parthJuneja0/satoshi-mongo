@@ -114,8 +114,13 @@ const Mine = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [balaceSufficient, setBalaceSufficient] = useState(false);
 
+  const getCardById = (cardId) => {
+    const card = unlockedCards.find((card) => card.cardId === cardId);
+    if (card) return card;
+    else return null;
+  };
+
   const handleCardClick = (card, isUnlocked) => {
-    // setSelectedCard(unlockedCards[card.cardId] || card);
     setSelectedCard(card);
     if (isUnlocked) {
       setShowBuyModal(true);
@@ -128,7 +133,7 @@ const Mine = () => {
     if (!showBuyModal) return;
     if (
       userInfo.utils[selectedCard.reqUtil] >=
-      unlockedCards[selectedCard.cardId].price
+      getCardById(selectedCard.cardId).price
     ) {
       setBalaceSufficient(true);
     } else {
@@ -151,20 +156,20 @@ const Mine = () => {
   const handleConfirmBuy = async () => {
     const newProfitAmount = calculateProfit(
       selectedCard.profitAmount,
-      unlockedCards[selectedCard.cardId].profitAmount,
-      unlockedCards[selectedCard.cardId].level
+      getCardById(selectedCard.cardId).profitAmount,
+      getCardById(selectedCard.cardId).level
     );
     const newPrice = calculatePrice(
       selectedCard.price,
-      unlockedCards[selectedCard.cardId].price,
-      unlockedCards[selectedCard.cardId].level
+      getCardById(selectedCard.cardId).price,
+      getCardById(selectedCard.cardId).level
     );
     const response = await cardUpgrade(
       userInfo.telegramId,
       selectedCard.cardId,
-      unlockedCards[selectedCard.cardId].price,
+      getCardById(selectedCard.cardId).price,
       selectedCard.reqUtil,
-      unlockedCards[selectedCard.cardId].profitAmount,
+      getCardById(selectedCard.cardId).profitAmount,
       newProfitAmount,
       newPrice
     );
@@ -425,41 +430,27 @@ const Mine = () => {
     }
 
     const getCardLevel = (cardId) => {
-      if (!unlockedCards[cardId]) return 0;
-      return unlockedCards[cardId].level;
+      if (!getCardById(cardId)) return 0;
+      return getCardById(cardId).level;
     };
-
-    useEffect(() => {
-      if (!unlockedCards) return;
-      console.log(unlockedCards);
-    }, [unlockedCards]);
 
     const ifConditionMet = (card) => {
       const { dependency, level } = conditions[card.cardId];
       const dependencyLevel = getCardLevel(dependency);
       if (dependencyLevel >= level) {
-        // setUnlockedCards((prev) => ({
-        //   ...prev,
-        //   [card.cardId]: {
-        //     level: 1,
-        //     profitAmount: card.profitAmount,
-        //     price: card.price,
-        //   },
-        // }));
-        // const cards = unlockNewCard(
-        // userInfo.telegramId,
-        // card.cardId,
-        // card.profitAmount,
-        // card.price
-        // );
-        // setUnlockedCards(cards);
+        const cards = unlockNewCard(
+          userInfo.telegramId,
+          card.cardId,
+          card.profitAmount,
+          card.price
+        );
+        setUnlockedCards(cards);
       }
       return dependencyLevel >= level;
     };
 
     const isCardUnlocked = (card) => {
-      if (unlockedCards[card.cardId]) return true;
-      // Check if card needs to be unlocked now -
+      if (getCardById(card.cardId)) return true;
       return ifConditionMet(card);
     };
 
@@ -521,8 +512,8 @@ const Mine = () => {
                     height={15}
                     className="icon-margin"
                   />
-                  {unlockedCards && unlockedCards[card.cardId]
-                    ? unlockedCards[card.cardId].profitAmount
+                  {unlockedCards && getCardById(card.cardId)
+                    ? getCardById(card.cardId).profitAmount
                     : card.profitAmount}
                 </div>
               </div>
@@ -531,9 +522,9 @@ const Mine = () => {
             <div className="mine-card-footer">
               <p>
                 Lvl &nbsp;
-                {unlockedCards && unlockedCards[card.cardId]
-                  ? unlockedCards[card.cardId].level
-                  : 0}
+                {unlockedCards && getCardById(card.cardId)
+                  ? getCardById(card.cardId).level
+                  : card.level}
               </p>
               <div className="vertical-separator"></div>
               {activeTab === "Animals" && (
@@ -564,8 +555,8 @@ const Mine = () => {
                 />
               )}
               <p>
-                {unlockedCards && unlockedCards[card.cardId]
-                  ? unlockedCards[card.cardId].price
+                {unlockedCards && getCardById(card.cardId)
+                  ? getCardById(card.cardId).price
                   : card.price}
               </p>
             </div>
@@ -606,6 +597,7 @@ const Mine = () => {
           onClose={handleCancel}
           onConfirm={handleConfirmBuy}
           card={selectedCard}
+          getCardById={getCardById}
           balaceSufficient={balaceSufficient}
         />
         <UnlockConditionModal
