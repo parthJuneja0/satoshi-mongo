@@ -103,10 +103,241 @@ const toolsImages = {
   "030": tractor,
 };
 
+const allCards = [
+  {
+    reqUtil: "food",
+    cardId: "001",
+    title: "Hen",
+    price: 5,
+    profitAmount: 220,
+  },
+  {
+    reqUtil: "food",
+    cardId: "002",
+    title: "Cow",
+    price: 8,
+    profitAmount: 280,
+  },
+  {
+    reqUtil: "food",
+    cardId: "003",
+    title: "Goat",
+    price: 5,
+    profitAmount: 320,
+  },
+  {
+    reqUtil: "food",
+    cardId: "004",
+    title: "Dog",
+    price: 7,
+    profitAmount: 420,
+  },
+  {
+    reqUtil: "food",
+    cardId: "005",
+    title: "Duck",
+    price: 5,
+    profitAmount: 320,
+  },
+  {
+    reqUtil: "food",
+    cardId: "006",
+    title: "Sheep",
+    price: 8,
+    profitAmount: 500,
+  },
+  {
+    reqUtil: "food",
+    cardId: "007",
+    title: "Donkey",
+    price: 8,
+    profitAmount: 300,
+  },
+  {
+    reqUtil: "food",
+    cardId: "008",
+    title: "Rabbit",
+    price: 7,
+    profitAmount: 400,
+  },
+  {
+    reqUtil: "food",
+    cardId: "009",
+    title: "Goose",
+    price: 5,
+    profitAmount: 380,
+  },
+  {
+    reqUtil: "food",
+    cardId: "010",
+    title: "Buffalo",
+    price: 7,
+    profitAmount: 420,
+  },
+  {
+    reqUtil: "fertilizer",
+    cardId: "011",
+    title: "Mango",
+    price: 7,
+    profitAmount: 250,
+  },
+  {
+    reqUtil: "fertilizer",
+    cardId: "012",
+    title: "Apple",
+    price: 5,
+    profitAmount: 500,
+  },
+  {
+    reqUtil: "fertilizer",
+    cardId: "013",
+    title: "Orange",
+    price: 5,
+    profitAmount: 350,
+  },
+  {
+    reqUtil: "fertilizer",
+    cardId: "014",
+    title: "Pear",
+    price: 8,
+    profitAmount: 300,
+  },
+  {
+    reqUtil: "fertilizer",
+    cardId: "015",
+    title: "Lemon",
+    price: 5,
+    profitAmount: 380,
+  },
+  {
+    reqUtil: "fertilizer",
+    cardId: "016",
+    title: "Peach",
+    price: 7,
+    profitAmount: 480,
+  },
+  {
+    reqUtil: "fertilizer",
+    cardId: "017",
+    title: "Teak",
+    price: 8,
+    profitAmount: 400,
+  },
+  {
+    reqUtil: "fertilizer",
+    cardId: "018",
+    title: "Guava",
+    price: 5,
+    profitAmount: 300,
+  },
+  {
+    reqUtil: "fertilizer",
+    cardId: "019",
+    title: "Jackfruit",
+    price: 7,
+    profitAmount: 280,
+  },
+  {
+    reqUtil: "fertilizer",
+    cardId: "020",
+    title: "Vegi",
+    price: 5,
+    profitAmount: 480,
+  },
+  {
+    reqUtil: "oil",
+    cardId: "021",
+    title: "Trowel",
+    price: 7,
+    profitAmount: 350,
+  },
+  {
+    reqUtil: "oil",
+    cardId: "022",
+    title: "Sickle",
+    price: 7,
+    profitAmount: 420,
+  },
+  {
+    reqUtil: "oil",
+    cardId: "023",
+    title: "Shear",
+    price: 8,
+    profitAmount: 300,
+  },
+  {
+    reqUtil: "oil",
+    cardId: "024",
+    title: "Rake",
+    price: 5,
+    profitAmount: 500,
+  },
+  {
+    reqUtil: "oil",
+    cardId: "025",
+    title: "Sprayer",
+    price: 8,
+    profitAmount: 250,
+  },
+  {
+    reqUtil: "oil",
+    cardId: "026",
+    title: "Feeder",
+    price: 7,
+    profitAmount: 200,
+  },
+  {
+    reqUtil: "oil",
+    cardId: "027",
+    title: "Seeder",
+    price: 5,
+    profitAmount: 280,
+  },
+  {
+    reqUtil: "oil",
+    cardId: "028",
+    title: "Shovel",
+    price: 5,
+    profitAmount: 450,
+  },
+  {
+    reqUtil: "oil",
+    cardId: "029",
+    title: "Wheel Barrow",
+    price: 7,
+    profitAmount: 300,
+  },
+  {
+    reqUtil: "oil",
+    cardId: "030",
+    title: "Tractor",
+    price: 8,
+    profitAmount: 380,
+  },
+];
+
+const conditions = [
+  { cardId: "006", dependency: "003", level: 3 },
+  { cardId: "007", dependency: "001", level: 3 },
+  { cardId: "008", dependency: "002", level: 3 },
+  { cardId: "009", dependency: "029", level: 1 },
+  { cardId: "010", dependency: "028", level: 1 },
+  { cardId: "016", dependency: "012", level: 3 },
+  { cardId: "017", dependency: "006", level: 1 },
+  { cardId: "018", dependency: "010", level: 1 },
+  { cardId: "019", dependency: "022", level: 3 },
+  { cardId: "020", dependency: "014", level: 3 },
+  { cardId: "026", dependency: "021", level: 3 },
+  { cardId: "027", dependency: "025", level: 3 },
+  { cardId: "028", dependency: "013", level: 3 },
+  { cardId: "029", dependency: "019", level: 1 },
+  { cardId: "030", dependency: "017", level: 1 },
+];
+
 const Mine = () => {
   const { userInfo, setUserInfo } = useContext(userDataContext);
   const { unlockedCards, setUnlockedCards } = useContext(cardsContext);
-  const { cardUpgrade, unlockNewCard } = useContext(transactionsContext);
+  const { cardUpgrade, unlockNewCards } = useContext(transactionsContext);
 
   const [activeTab, setActiveTab] = useState("Animals");
   const [showBuyModal, setShowBuyModal] = useState(false);
@@ -178,27 +409,39 @@ const Mine = () => {
     setUnlockedCards(response.cards);
   };
 
+  useEffect(() => {
+    if (!unlockedCards || !selectedCard) return;
+    // Get cards that need to be unlocked
+    const dependenciesToUnlock = conditions
+      .filter(
+        (condition) =>
+          condition.dependency === selectedCard.cardId &&
+          getCardById(selectedCard.cardId).level >= condition.level
+      )
+      .map((condition) => condition.cardId)
+      .filter(
+        (cardId) =>
+          !unlockedCards.some((unlockedCard) => unlockedCard.cardId === cardId)
+      );
+    console.log(dependenciesToUnlock);
+    if (dependenciesToUnlock.length > 0) {
+      // Find the details of the cards to unlock
+      const cardsToUnlock = allCards
+        .filter((card) => dependenciesToUnlock.includes(card.cardId))
+        .map(({ reqUtil, title, ...rest }) => rest);
+
+      unlockCards(userInfo.telegramId, cardsToUnlock);
+    }
+  }, [unlockedCards]);
+
+  const unlockCards = async (user, newCards) => {
+    const cards = await unlockNewCards(user, newCards);
+    setUnlockedCards(cards);
+  };
+
   const handleCancel = () => {
     setShowBuyModal(false);
     setShowUnlockModal(false);
-  };
-
-  const conditions = {
-    "006": { dependency: "003", level: 3 },
-    "007": { dependency: "001", level: 3 },
-    "008": { dependency: "002", level: 3 },
-    "009": { dependency: "029", level: 1 },
-    "010": { dependency: "028", level: 1 },
-    "016": { dependency: "012", level: 3 },
-    "017": { dependency: "006", level: 1 },
-    "018": { dependency: "010", level: 1 },
-    "019": { dependency: "022", level: 3 },
-    "020": { dependency: "014", level: 3 },
-    "026": { dependency: "021", level: 3 },
-    "027": { dependency: "025", level: 3 },
-    "028": { dependency: "013", level: 3 },
-    "029": { dependency: "019", level: 1 },
-    "030": { dependency: "017", level: 1 },
   };
 
   const renderCards = () => {
@@ -206,252 +449,19 @@ const Mine = () => {
     let cardClass = "";
 
     if (activeTab === "Animals") {
-      cards = [
-        {
-          reqUtil: "food",
-          cardId: "001",
-          title: "Hen",
-          price: 5,
-          profitAmount: 220,
-        },
-        {
-          reqUtil: "food",
-          cardId: "002",
-          title: "Cow",
-          price: 8,
-          profitAmount: 280,
-        },
-        {
-          reqUtil: "food",
-          cardId: "003",
-          title: "Goat",
-          price: 5,
-          profitAmount: 320,
-        },
-        {
-          reqUtil: "food",
-          cardId: "004",
-          title: "Dog",
-          price: 7,
-          profitAmount: 420,
-        },
-        {
-          reqUtil: "food",
-          cardId: "005",
-          title: "Duck",
-          price: 5,
-          profitAmount: 320,
-        },
-        {
-          reqUtil: "food",
-          cardId: "006",
-          title: "Sheep",
-          price: 8,
-          profitAmount: 500,
-        },
-        {
-          reqUtil: "food",
-          cardId: "007",
-          title: "Donkey",
-          price: 8,
-          profitAmount: 300,
-        },
-        {
-          reqUtil: "food",
-          cardId: "008",
-          title: "Rabbit",
-          price: 7,
-          profitAmount: 400,
-        },
-        {
-          reqUtil: "food",
-          cardId: "009",
-          title: "Goose",
-          price: 5,
-          profitAmount: 380,
-        },
-        {
-          reqUtil: "food",
-          cardId: "010",
-          title: "Buffalo",
-          price: 7,
-          profitAmount: 420,
-        },
-      ];
+      cards = allCards.filter((card) => card.reqUtil === "food");
       cardClass = "animals";
     } else if (activeTab === "Trees") {
-      cards = [
-        {
-          reqUtil: "fertilizer",
-          cardId: "011",
-          title: "Mango",
-          price: 7,
-          profitAmount: 250,
-        },
-        {
-          reqUtil: "fertilizer",
-          cardId: "012",
-          title: "Apple",
-          price: 5,
-          profitAmount: 500,
-        },
-        {
-          reqUtil: "fertilizer",
-          cardId: "013",
-          title: "Orange",
-          price: 5,
-          profitAmount: 350,
-        },
-        {
-          reqUtil: "fertilizer",
-          cardId: "014",
-          title: "Pear",
-          price: 8,
-          profitAmount: 300,
-        },
-        {
-          reqUtil: "fertilizer",
-          cardId: "015",
-          title: "Lemon",
-          price: 5,
-          profitAmount: 380,
-        },
-        {
-          reqUtil: "fertilizer",
-          cardId: "016",
-          title: "Peach",
-          price: 7,
-          profitAmount: 480,
-        },
-        {
-          reqUtil: "fertilizer",
-          cardId: "017",
-          title: "Teak",
-          price: 8,
-          profitAmount: 400,
-        },
-        {
-          reqUtil: "fertilizer",
-          cardId: "018",
-          title: "Guava",
-          price: 5,
-          profitAmount: 300,
-        },
-        {
-          reqUtil: "fertilizer",
-          cardId: "019",
-          title: "Jackfruit",
-          price: 7,
-          profitAmount: 280,
-        },
-        {
-          reqUtil: "fertilizer",
-          cardId: "020",
-          title: "Vegi",
-          price: 5,
-          profitAmount: 480,
-        },
-      ];
+      cards = cards = allCards.filter((card) => card.reqUtil === "fertilizer");
       cardClass = "trees";
     } else if (activeTab === "Tools") {
-      cards = [
-        {
-          reqUtil: "oil",
-          cardId: "021",
-          title: "Trowel",
-          price: 7,
-          profitAmount: 350,
-        },
-        {
-          reqUtil: "oil",
-          cardId: "022",
-          title: "Sickle",
-          price: 7,
-          profitAmount: 420,
-        },
-        {
-          reqUtil: "oil",
-          cardId: "023",
-          title: "Shear",
-          price: 8,
-          profitAmount: 300,
-        },
-        {
-          reqUtil: "oil",
-          cardId: "024",
-          title: "Rake",
-          price: 5,
-          profitAmount: 500,
-        },
-        {
-          reqUtil: "oil",
-          cardId: "025",
-          title: "Sprayer",
-          price: 8,
-          profitAmount: 250,
-        },
-        {
-          reqUtil: "oil",
-          cardId: "026",
-          title: "Feeder",
-          price: 7,
-          profitAmount: 200,
-        },
-        {
-          reqUtil: "oil",
-          cardId: "027",
-          title: "Seeder",
-          price: 5,
-          profitAmount: 280,
-        },
-        {
-          reqUtil: "oil",
-          cardId: "028",
-          title: "Shovel",
-          price: 5,
-          profitAmount: 450,
-        },
-        {
-          reqUtil: "oil",
-          cardId: "029",
-          title: "Wheel Barrow",
-          price: 7,
-          profitAmount: 300,
-        },
-        {
-          reqUtil: "oil",
-          cardId: "030",
-          title: "Tractor",
-          price: 8,
-          profitAmount: 380,
-        },
-      ];
+      cards = cards = allCards.filter((card) => card.reqUtil === "oil");
       cardClass = "tools";
     }
 
-    const getCardLevel = (cardId) => {
-      if (!getCardById(cardId)) return 0;
-      return getCardById(cardId).level;
-    };
-
-    const ifConditionMet = (card) => {
-      const { dependency, level } = conditions[card.cardId];
-      const dependencyLevel = getCardLevel(dependency);
-      if (dependencyLevel >= level) {
-        const cards = unlockNewCard(
-          userInfo.telegramId,
-          card.cardId,
-          card.profitAmount,
-          card.price
-        );
-        setUnlockedCards(cards);
-      }
-      return dependencyLevel >= level;
-    };
-
     const isCardUnlocked = (card) => {
       if (getCardById(card.cardId)) return true;
-      return ifConditionMet(card);
+      return false;
     };
 
     return (

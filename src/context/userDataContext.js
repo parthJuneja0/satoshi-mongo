@@ -32,7 +32,7 @@ export const UserDataProvider = ({ children }) => {
                 });
             } else {
                 setUserWebData({
-                    userId: 100,
+                    userId: 1,
                     username: "Guest Account",
                     userPic: null,
                     premium: false,

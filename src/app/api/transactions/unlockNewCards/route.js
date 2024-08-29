@@ -2,19 +2,12 @@ import { UnlockedCards } from "@/lib/models/unlockedcards";
 import { NextResponse } from "next/server";
 
 export async function PATCH(req) {
-    const { user, cardId, profitAmount, price } = await req.json();
-
-    const newCard = {
-        cardId,
-        level: 1,
-        profitAmount,
-        price
-    };
+    const { user, newCards } = await req.json();
 
     try {
         const updatedDoc = await UnlockedCards.findOneAndUpdate(
             { user },
-            { $push: { cards: newCard } },
+            { $push: { cards: { $each: newCards } } },
             { new: true }
         );
 
@@ -22,7 +15,7 @@ export async function PATCH(req) {
             return NextResponse.json({ error: 'Document not found' }, { status: 404 });
         }
 
-        return NextResponse.json({ doc: updatedDoc });
+        return NextResponse.json({ cards: updatedDoc.cards });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Failed to update document' }, { status: 500 });

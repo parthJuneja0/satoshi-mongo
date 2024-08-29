@@ -28,18 +28,16 @@ export const TransactionsProvider = ({ children }) => {
         return response.data;
     }
 
-    const unlockNewCard = async (telegramId, cardId, profitAmount, price) => {
-        const response = await axios.patch("/api/transactions/unlockNewCard", {
-            user: telegramId,
-            cardId,
-            profitAmount,
-            price,
+    const unlockNewCards = async (user, newCards) => {
+        const response = await axios.patch("/api/transactions/unlockNewCards", {
+            user,
+            newCards
         });
         return response.data.cards;
     }
 
     return (
-        <transactionsContext.Provider value={{ shopPurchase, cardUpgrade, unlockNewCard }}>
+        <transactionsContext.Provider value={{ shopPurchase, cardUpgrade, unlockNewCards }}>
             {children}
         </transactionsContext.Provider>
     );
