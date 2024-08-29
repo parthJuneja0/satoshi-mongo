@@ -1,49 +1,32 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import "./DailyRewardsModal.css";
 import Coin from "../../assets/coin.png";
 import Image from "next/image";
-// import { userInfoContext } from "@/context/userInfoContext";
+import { userInfoContext } from "@/context/userInfoContext";
+
 const DailyRewardsModal = ({ claimDailyReward, closeModal }) => {
-  // const { userInfo } = useContext(userInfoContext);
-  const today = new Date().toLocaleDateString("en-US", { weekday: "long" });
+  const { userInfo } = useContext(userInfoContext);
 
-  const array = [
-    {
-      day: "Monday",
-      reward: 1000,
-    },
-    {
-      day: "Tuesday",
-      reward: 2500,
-    },
-    {
-      day: "Wednesday",
-      reward: 5000,
-    },
-    {
-      day: "Thursday",
-      reward: 10000,
-    },
-    {
-      day: "Friday",
-      reward: 50000,
-    },
-    {
-      day: "Saturday",
-      reward: 100000,
-    },
-    {
-      day: "Sunday",
-      reward: 500000,
-    },
+  // Define the array of rewards
+  const rewardsArray = [
+    { reward: 1000 },
+    { reward: 2500 },
+    { reward: 5000 },
+    { reward: 10000 },
+    { reward: 50000 },
+    { reward: 100000 },
+    { reward: 500000 },
   ];
-  const [selectedDay, setSelectedDay] = useState();
-  // const isAllClaimed = userInfo.dailyRewards[today];
 
-  const handleDaySelection = (obj) => {
-    if (obj.day === today && !userInfo.dailyRewards[obj.day]) {
-      setSelectedDay(obj);
+  const [selectedDay, setSelectedDay] = useState(null);
+
+  const handleDaySelection = (reward, index) => {
+    const nextDay = Object.keys(userInfo.dailyRewards).length + 1;
+    
+    //the user is selecting the correct reward in sekuence
+    if (index + 1 === nextDay) {
+      setSelectedDay({ day: index + 1, reward });
     }
   };
 
@@ -57,24 +40,21 @@ const DailyRewardsModal = ({ claimDailyReward, closeModal }) => {
         </div>
         <h2 className="reward-modaltitle">Daily Rewards</h2>
         <div className="daily-rewards-grid">
-          {array.map((obj) => (
+          {rewardsArray.map((rewardObj, index) => (
             <div
-              key={obj.day}
+              key={index}
               className={`daily-reward-item ${
-                selectedDay && selectedDay.day === obj.day
+                selectedDay && selectedDay.day === index + 1
                   ? "border-2 border-white"
                   : ""
-              // } ${
-                // userInfo.dailyRewards[obj.day]
-                //   ? "claimed"
-                //   : obj.day !== today
-                //   ? "locked-day"
-                //   : ""
-              }
-                `}
-              onClick={() => {
-                handleDaySelection(obj);
-              }}
+              } ${
+                userInfo.dailyRewards[`day${index + 1}`]
+                  ? "claimed"
+                  : index + 1 !== Object.keys(userInfo.dailyRewards).length + 1
+                  ? "locked-day"
+                  : ""
+              }`}
+              onClick={() => handleDaySelection(rewardObj.reward, index)}
             >
               <div className="reward-day-circle">
                 <Image
@@ -83,25 +63,26 @@ const DailyRewardsModal = ({ claimDailyReward, closeModal }) => {
                   height={30}
                   width={30}
                 />
-                <p className="daily-reward-day">{obj.day}</p>
-                <p className="daily-reward-amount">{obj.reward}</p>
+                <p className="daily-reward-amount">{rewardObj.reward}</p>
               </div>
-              {/* {userInfo.dailyRewards[obj.day] && (
+              {userInfo.dailyRewards[`day${index + 1}`] && (
                 <FaCheckCircle className="daily-reward-checkmark" />
-              )} */}
+              )}
             </div>
           ))}
         </div>
         <button
           className="reward-modalaction-button"
-          // disabled={isAllClaimed}
+          disabled={!selectedDay || selectedDay.day !== Object.keys(userInfo.dailyRewards).length + 1}
           onClick={() => {
             if (!selectedDay) return;
-            setSelectedDay({});
             claimDailyReward(selectedDay.day, selectedDay.reward);
+            setSelectedDay(null);
           }}
         >
-          {/* {isAllClaimed ? "Come back tomorrow" : "Claim"} */}
+          {selectedDay && selectedDay.day === Object.keys(userInfo.dailyRewards).length + 1
+            ? "Claim"
+            : "Come back tomorrow"}
         </button>
       </div>
     </div>

@@ -2,8 +2,8 @@
 import React, { useContext, useState } from "react";
 import Image from "next/image";
 import { FaCheckCircle } from "react-icons/fa";
-// import { ref, update } from "firebase/database";
-// import { realtimeDb } from "@/config/firebase";
+import { ref, update } from "firebase/database";
+import { realtimeDb } from "@/config/firebase";
 import "./Earn.css";
 import DailyRewardsModal from "@/components/RewardModal/DailyRewardsModal";
 import Youtube from "@/assets/social/youtube.png";
@@ -11,29 +11,26 @@ import X from "@/assets/social/X.png";
 import Telegram from "@/assets/social/telegram.png";
 import Coin from "@/assets/coin.png";
 import Reward from "@/assets/social/reward.png";
-// import { userDataContext } from "@/context/userDataContext";
-// import { userInfoContext } from "@/context/userInfoContext";
+import { userDataContext } from "@/context/userDataContext";
+import { userInfoContext } from "@/context/userInfoContext";
 import Footer from "@/components/Footer/page";
 
 const Earn = () => {
-  let youtubeReward = 50000;
-  let telegramReward = 20000;
-  let twitterReward = 20000;
-  let satoshiTVReward = 5000;
-  const [showDailyRewards, setShowDailyRewards] = useState(false);
+  const rewards = {
+    youtube: 50000,
+    telegram: 20000,
+    twitter: 20000,
+    satoshiTV: 5000,
+  };
 
-  // const { userWebData } = useContext(userDataContext);
-  // const { userInfo } = useContext(userInfoContext);
+  const [showDailyRewards, setShowDailyRewards] = useState(false);
+  const { userWebData } = useContext(userDataContext);
+  const { userInfo } = useContext(userInfoContext);
 
   const grantReward = (task) => {
     if (!userInfo) return;
-    const reward = {
-      youtube: youtubeReward,
-      telegram: telegramReward,
-      twitter: twitterReward,
-      satoshiTV: satoshiTVReward,
-    }[task];
 
+    const reward = rewards[task];
     update(ref(realtimeDb, `/users/${userWebData.userId}`), {
       coins: userInfo.coins + reward,
     });
@@ -42,24 +39,49 @@ const Earn = () => {
   const handleLinkClick = async (task) => {
     if (!userInfo) return;
     if (userInfo.completedTasks[task]) return;
+
     update(ref(realtimeDb, `/users/${userWebData.userId}`), {
       completedTasks: {
         ...userInfo.completedTasks,
         [task]: true,
       },
     });
+
     grantReward(task);
   };
 
   const handleDailyRewardClick = () => setShowDailyRewards(true);
+
   const claimDailyReward = (day, reward) => {
-    if (!userInfo || userInfo.dailyRewards[day]) return;
+    if (!userInfo) return;
+
+    const currentTimestamp = Date.now();
+    const lastClaimedTimestamp = userInfo.lastClaimed?.timestamp;
+    const lastClaimedDay = userInfo.lastClaimed?.day || 0;
+    const nextDay = (lastClaimedDay % 7) + 1;
+
+    // Correct reward in sequence and that 24 hours have passed
+    if (lastClaimedTimestamp) {
+      const timeDifference = currentTimestamp - lastClaimedTimestamp;
+      if (timeDifference < 24 * 60 * 60 * 1000) {
+        alert("You need to wait 24 hours from your last claim to collect the next reward.");
+        return;
+      }
+    }
+
+    if (day !== nextDay) {
+      alert("You need to claim the previous day's reward first.");
+      return;
+    }
+
+    // Update the database with the claimed reward as true
     update(ref(realtimeDb, `/users/${userWebData.userId}`), {
-      dailyRewards: {
-        ...userInfo.dailyRewards,
-        [day]: true,
-      },
+      [`dailyRewards/day${day}`]: true,
       coins: userInfo.coins + reward,
+      lastClaimed: {
+        day: day,
+        timestamp: currentTimestamp,
+      },
     });
   };
 
@@ -79,6 +101,7 @@ const Earn = () => {
 
         <div className="earn-section">
           <h2 className="earn-section-title">Satoshi TV</h2>
+          {/* YouTube Task */}
           <a
             href="https://youtube.com/@satoshitvnews?si=3e40LeAs-ri8Zf-Y"
             target="_blank"
@@ -107,14 +130,15 @@ const Earn = () => {
                     width={30}
                     height={30}
                   />
-                  <span className="earn-span-value ">{youtubeReward}</span>
+                  <span className="earn-span-value ">{rewards.youtube}</span>
                 </div>
               </div>
             </div>
-            {/* {userInfo && userInfo.completedTasks.youtube && (
+            {userInfo && userInfo.completedTasks.youtube && (
               <FaCheckCircle className="earn-task-checkmark" />
-            )} */}
+            )}
           </a>
+          {/* Satoshi TV Task */}
           <a
             href="https://youtube.com/@satoshitvnews?si=3e40LeAs-ri8Zf-Y"
             target="_blank"
@@ -134,11 +158,62 @@ const Earn = () => {
               </div>
               <div className="earn-task-details">
                 <p className="earn-task-title">Watch tutorial on Satoshi TV</p>
+                <div className="earn-task-reward">
+                  <p className="earn-plus">+</p>
+                  <Image
+                    src={Coin}
+                    alt="Coins"
+                    className="earn-reward-icon"
+                    width={30}
+                    height={30}
+                  />
+                  <span className="earn-span-value">{rewards.satoshiTV}</span>
+                </div>
               </div>
             </div>
-            {/* {userInfo && userInfo.completedTasks.satoshiTV && (
+            {userInfo && userInfo.completedTasks.satoshiTV && (
               <FaCheckCircle className="earn-task-checkmark" />
-            )} */}
+            )}
+          </a>
+        </div>
+
+        <div className="earn-section">
+          <h2 className="earn-section-title">Join Airdrop Pro Channel</h2>
+          <a
+            href="https://t.me/Aidropro"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="earn-task-item"
+            onClick={() => handleLinkClick("telegram")}
+          >
+            <div className="earn-task-content">
+              <div className="earn-task-icon earn-glow-effect-white">
+                <Image
+                  src={Telegram}
+                  alt="Telegram"
+                  className="earn-task-icon-telegram"
+                  width={40}
+                  height={40}
+                />
+              </div>
+              <div className="earn-task-details">
+                <p className="earn-task-title">Join Airdrop Pro Channel</p>
+                <div className="earn-task-reward">
+                  <p className="earn-plus">+</p>
+                  <Image
+                    src={Coin}
+                    alt="Coins"
+                    className="earn-reward-icon"
+                    width={30}
+                    height={30}
+                  />
+                  <span className="earn-span-value ">{rewards.telegram}</span>
+                </div>
+              </div>
+            </div>
+            {userInfo && userInfo.completedTasks.telegram && (
+              <FaCheckCircle className="earn-task-checkmark" />
+            )}
           </a>
         </div>
 
@@ -191,50 +266,15 @@ const Earn = () => {
                       width={30}
                       height={30}
                     />
-                    <span className="earn-span-value ">{telegramReward}</span>
+                    <span className="earn-span-value ">{rewards.telegram}</span>
                   </div>
                 </div>
               </div>
-              {/* {userInfo && userInfo.completedTasks.telegram && (
+              {userInfo && userInfo.completedTasks.telegram && (
                 <FaCheckCircle className="earn-task-checkmark" />
-              )} */}
+              )}
             </a>
-            <a
-              href="https://t.me/Aidropro"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="earn-task-item"
-              onClick={() => handleLinkClick("telegram")}
-            >
-              <div className="earn-task-content">
-                <div className="earn-task-icon earn-glow-effect-white">
-                  <Image
-                    src={Telegram}
-                    alt="Telegram"
-                    className="earn-task-icon-telegram"
-                    width={40}
-                    height={40}
-                  />
-                </div>
-                <div className="earn-task-details">
-                  <p className="earn-task-title">Join Airdrop Pro Channel</p>
-                  <div className="earn-task-reward">
-                    <p className="earn-plus">+</p>
-                    <Image
-                      src={Coin}
-                      alt="Coins"
-                      className="earn-reward-icon"
-                      width={30}
-                      height={30}
-                    />
-                    <span className="earn-span-value ">{telegramReward}</span>
-                  </div>
-                </div>
-              </div>
-              {/* {userInfo && userInfo.completedTasks.telegram && (
-                <FaCheckCircle className="earn-task-checkmark" />
-              )} */}
-            </a>
+            {/* Twitter Task */}
             <a
               href="https://x.com/satoshifarmss"
               target="_blank"
@@ -263,13 +303,13 @@ const Earn = () => {
                       width={30}
                       height={30}
                     />
-                    <span className="earn-span-value ">{twitterReward}</span>
+                    <span className="earn-span-value ">{rewards.twitter}</span>
                   </div>
                 </div>
               </div>
-              {/* {userInfo && userInfo.completedTasks.twitter && (
+              {userInfo && userInfo.completedTasks.twitter && (
                 <FaCheckCircle className="earn-task-checkmark" />
-              )} */}
+              )}
             </a>
           </div>
         </div>
