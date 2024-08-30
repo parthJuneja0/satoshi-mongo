@@ -14,12 +14,10 @@ import satoshiImage from "../assets/satoshi.png";
 import loadingImage from "@/assets/loading/page1.jpg";
 
 // Database imports
-import { ref, update } from "firebase/database";
 import ClaimReferalRewardModal from "@/components/ClaimReferalRewardModal/page";
 import { TbExposurePlus1 } from "react-icons/tb";
 import { userDataContext } from "@/context/userDataContext";
 import { userInfoContext } from "@/context/userInfoContext";
-import { realtimeDb } from "@/config/firebase";
 import ClaimCoinsAsPerYPH from "@/components/ClaimCoinsAsPerYPH/ClaimCoinsAsPerYPH";
 
 export default function Home() {
@@ -58,7 +56,8 @@ export default function Home() {
         setCoinProfit(profit);
         setIsClaimAvailable(true);
       } else {
-        update(ref(realtimeDb, `/users/${userWebData.userId}`), {
+        // Update user's last session to mark as claimed
+        updateUserInfo(userWebData.userId, {
           lastSession: {
             ...userInfo.lastSession,
             hasClaimed: true,
@@ -74,7 +73,8 @@ export default function Home() {
   // Add energy when user comes online
   useEffect(() => {
     if (!energyProfit) return;
-    update(ref(realtimeDb, `/users/${userWebData.userId}`), {
+    // Update user's current energy
+    updateUserInfo(userWebData.userId, {
       currentEnergy: Math.min(
         userInfo.currentEnergy + energyProfit,
         userInfo.totalEnergy
@@ -101,7 +101,6 @@ export default function Home() {
       { id: Date.now(), x: e.clientX, y: e.clientY },
     ]);
 
-
     //Update position for the animation
     imgRef.current.style.transform = `perspective(1000px) rotateX(${-y / 10
       }deg) rotateY(${x / 10}deg)`;
@@ -111,7 +110,8 @@ export default function Home() {
       imgRef.current.style.transform = "";
     }, 100);
 
-    update(ref(realtimeDb, `/users/${userWebData.userId}`), {
+    // Update user's coins and energy
+    updateUserInfo(userWebData.userId, {
       coins: userInfo.coins + userInfo.pointsToAdd,
       currentEnergy: userInfo.currentEnergy - userInfo.pointsToAdd,
     });
@@ -144,6 +144,27 @@ export default function Home() {
       return num;
     }
   }
+
+  const updateUserInfo = async (userId, updatedData) => {
+    try {
+      const response = await fetch(`/api/users?id=${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update user info');
+      }
+
+      const data = await response.json();
+      console.log('User updated:', data.user);
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
+  };
 
   return (
     <div className=" flex flex-col justify-center items-center bg-animated w-[450px]">
@@ -292,7 +313,7 @@ export default function Home() {
                           <div className="flex items-center mt-1">
                             <div className="w-20 h-2 bg-gray-700 rounded-full">
                               <div className="h-2 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full"></div>
-                            </div>
+                            </div> 
                           </div> 
                         </div>
                       </div> */}

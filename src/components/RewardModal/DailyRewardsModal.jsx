@@ -24,7 +24,7 @@ const DailyRewardsModal = ({ claimDailyReward, closeModal }) => {
   const handleDaySelection = (reward, index) => {
     const nextDay = Object.keys(userInfo.dailyRewards).length + 1;
     
-    //the user is selecting the correct reward in sekuence
+    // The user is selecting the correct reward in sequence
     if (index + 1 === nextDay) {
       setSelectedDay({ day: index + 1, reward });
     }

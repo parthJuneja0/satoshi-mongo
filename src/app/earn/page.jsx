@@ -2,8 +2,8 @@
 import React, { useContext, useState } from "react";
 import Image from "next/image";
 import { FaCheckCircle } from "react-icons/fa";
-import { ref, update } from "firebase/database";
-import { realtimeDb } from "@/config/firebase";
+// import { ref, update } from "firebase/database";
+// import { realtimeDb } from "@/config/firebase";
 import "./Earn.css";
 import DailyRewardsModal from "@/components/RewardModal/DailyRewardsModal";
 import Youtube from "@/assets/social/youtube.png";
@@ -31,21 +31,21 @@ const Earn = () => {
     if (!userInfo) return;
 
     const reward = rewards[task];
-    update(ref(realtimeDb, `/users/${userWebData.userId}`), {
-      coins: userInfo.coins + reward,
-    });
+    // update(ref(realtimeDb, `/users/${userWebData.userId}`), {
+    //   coins: userInfo.coins + reward,
+    // });
   };
 
   const handleLinkClick = async (task) => {
     if (!userInfo) return;
     if (userInfo.completedTasks[task]) return;
 
-    update(ref(realtimeDb, `/users/${userWebData.userId}`), {
-      completedTasks: {
-        ...userInfo.completedTasks,
-        [task]: true,
-      },
-    });
+    // update(ref(realtimeDb, `/users/${userWebData.userId}`), {
+    //   completedTasks: {
+    //     ...userInfo.completedTasks,
+    //     [task]: true,
+    //   },
+    // });
 
     grantReward(task);
   };
@@ -75,14 +75,14 @@ const Earn = () => {
     }
 
     // Update the database with the claimed reward as true
-    update(ref(realtimeDb, `/users/${userWebData.userId}`), {
-      [`dailyRewards/day${day}`]: true,
-      coins: userInfo.coins + reward,
-      lastClaimed: {
-        day: day,
-        timestamp: currentTimestamp,
-      },
-    });
+    // update(ref(realtimeDb, `/users/${userWebData.userId}`), {
+    //   [`dailyRewards/day${day}`]: true,
+    //   coins: userInfo.coins + reward,
+    //   lastClaimed: {
+    //     day: day,
+    //     timestamp: currentTimestamp,
+    //   },
+    // });
   };
 
   return (
