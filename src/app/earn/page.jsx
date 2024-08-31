@@ -2,8 +2,6 @@
 import React, { useContext, useState } from "react";
 import Image from "next/image";
 import { FaCheckCircle } from "react-icons/fa";
-// import { ref, update } from "firebase/database";
-// import { realtimeDb } from "@/config/firebase";
 import "./Earn.css";
 import DailyRewardsModal from "@/components/RewardModal/DailyRewardsModal";
 import Youtube from "@/assets/social/youtube.png";
@@ -12,8 +10,8 @@ import Telegram from "@/assets/social/telegram.png";
 import Coin from "@/assets/coin.png";
 import Reward from "@/assets/social/reward.png";
 import { userDataContext } from "@/context/userDataContext";
-import { userInfoContext } from "@/context/userInfoContext";
 import Footer from "@/components/Footer/page";
+import { transactionsContext } from "@/context/transactionsContext";
 
 const Earn = () => {
   const rewards = {
@@ -24,66 +22,21 @@ const Earn = () => {
   };
 
   const [showDailyRewards, setShowDailyRewards] = useState(false);
-  const { userWebData } = useContext(userDataContext);
-  const { userInfo } = useContext(userInfoContext);
-
-  const grantReward = (task) => {
-    if (!userInfo) return;
-
-    const reward = rewards[task];
-    // update(ref(realtimeDb, `/users/${userWebData.userId}`), {
-    //   coins: userInfo.coins + reward,
-    // });
-  };
+  const { userInfo, setUserInfo, userRewards, setUserRewards } =
+    useContext(userDataContext);
+  const { completeTask } = useContext(transactionsContext);
 
   const handleLinkClick = async (task) => {
     if (!userInfo) return;
-    if (userInfo.completedTasks[task]) return;
+    if (userRewards.completedTasks[task]) return;
+    const reward = rewards[task];
 
-    // update(ref(realtimeDb, `/users/${userWebData.userId}`), {
-    //   completedTasks: {
-    //     ...userInfo.completedTasks,
-    //     [task]: true,
-    //   },
-    // });
-
-    grantReward(task);
+    const response = await completeTask(userInfo.telegramId, task, reward);
+    setUserRewards(response.rewards);
+    setUserInfo(response.user);
   };
 
   const handleDailyRewardClick = () => setShowDailyRewards(true);
-
-  const claimDailyReward = (day, reward) => {
-    if (!userInfo) return;
-
-    const currentTimestamp = Date.now();
-    const lastClaimedTimestamp = userInfo.lastClaimed?.timestamp;
-    const lastClaimedDay = userInfo.lastClaimed?.day || 0;
-    const nextDay = (lastClaimedDay % 7) + 1;
-
-    // Correct reward in sequence and that 24 hours have passed
-    if (lastClaimedTimestamp) {
-      const timeDifference = currentTimestamp - lastClaimedTimestamp;
-      if (timeDifference < 24 * 60 * 60 * 1000) {
-        alert("You need to wait 24 hours from your last claim to collect the next reward.");
-        return;
-      }
-    }
-
-    if (day !== nextDay) {
-      alert("You need to claim the previous day's reward first.");
-      return;
-    }
-
-    // Update the database with the claimed reward as true
-    // update(ref(realtimeDb, `/users/${userWebData.userId}`), {
-    //   [`dailyRewards/day${day}`]: true,
-    //   coins: userInfo.coins + reward,
-    //   lastClaimed: {
-    //     day: day,
-    //     timestamp: currentTimestamp,
-    //   },
-    // });
-  };
 
   return (
     <div className="earn-container">
@@ -134,7 +87,7 @@ const Earn = () => {
                 </div>
               </div>
             </div>
-            {userInfo && userInfo.completedTasks.youtube && (
+            {userRewards && userRewards.completedTasks.youtube && (
               <FaCheckCircle className="earn-task-checkmark" />
             )}
           </a>
@@ -171,7 +124,7 @@ const Earn = () => {
                 </div>
               </div>
             </div>
-            {userInfo && userInfo.completedTasks.satoshiTV && (
+            {userRewards && userRewards.completedTasks.satoshiTV && (
               <FaCheckCircle className="earn-task-checkmark" />
             )}
           </a>
@@ -211,7 +164,7 @@ const Earn = () => {
                 </div>
               </div>
             </div>
-            {userInfo && userInfo.completedTasks.telegram && (
+            {userRewards && userRewards.completedTasks.telegram && (
               <FaCheckCircle className="earn-task-checkmark" />
             )}
           </a>
@@ -270,7 +223,7 @@ const Earn = () => {
                   </div>
                 </div>
               </div>
-              {userInfo && userInfo.completedTasks.telegram && (
+              {userRewards && userRewards.completedTasks.telegram && (
                 <FaCheckCircle className="earn-task-checkmark" />
               )}
             </a>
@@ -307,17 +260,14 @@ const Earn = () => {
                   </div>
                 </div>
               </div>
-              {userInfo && userInfo.completedTasks.twitter && (
+              {userRewards && userRewards.completedTasks.twitter && (
                 <FaCheckCircle className="earn-task-checkmark" />
               )}
             </a>
           </div>
         </div>
         {showDailyRewards && (
-          <DailyRewardsModal
-            claimDailyReward={claimDailyReward}
-            closeModal={() => setShowDailyRewards(false)}
-          />
+          <DailyRewardsModal closeModal={() => setShowDailyRewards(false)} />
         )}
       </div>
       <Footer />

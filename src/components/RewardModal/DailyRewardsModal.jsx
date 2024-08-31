@@ -3,10 +3,13 @@ import { FaCheckCircle } from "react-icons/fa";
 import "./DailyRewardsModal.css";
 import Coin from "../../assets/coin.png";
 import Image from "next/image";
-import { userInfoContext } from "@/context/userInfoContext";
+import { userDataContext } from "@/context/userDataContext";
+import { transactionsContext } from "@/context/transactionsContext";
 
-const DailyRewardsModal = ({ claimDailyReward, closeModal }) => {
-  const { userInfo } = useContext(userInfoContext);
+const DailyRewardsModal = ({ closeModal }) => {
+  const { userInfo, setUserInfo, userRewards, setUserRewards } =
+    useContext(userDataContext);
+  const { claimDailyReward } = useContext(transactionsContext);
 
   // Define the array of rewards
   const rewardsArray = [
@@ -22,12 +25,52 @@ const DailyRewardsModal = ({ claimDailyReward, closeModal }) => {
   const [selectedDay, setSelectedDay] = useState(null);
 
   const handleDaySelection = (reward, index) => {
-    const nextDay = Object.keys(userInfo.dailyRewards).length + 1;
-    
+    const nextDay = Object.keys(userRewards.dailyRewards).length + 1;
+
     // The user is selecting the correct reward in sequence
     if (index + 1 === nextDay) {
       setSelectedDay({ day: index + 1, reward });
     }
+  };
+
+  const handleClaimDailyReward = async (day, reward) => {
+    if (!userInfo) return;
+
+    const currentTimestamp = Date.now();
+    console.log(currentTimestamp);
+    const lastClaimedTimestamp = userRewards.dailyRewards.lastClaimed.timestamp;
+    console.log(lastClaimedTimestamp);
+    const lastClaimedDay = userRewards.dailyRewards.lastClaimed.day;
+    console.log(lastClaimedDay);
+    const nextDay = (lastClaimedDay % 7) + 1;
+    console.log(nextDay);
+
+    // Correct reward in sequence and that 24 hours have passed
+    if (lastClaimedTimestamp) {
+      const timeDifference = currentTimestamp - lastClaimedTimestamp;
+      console.log(timeDifference);
+      if (timeDifference < 86400000) {
+        // 24 * 60 * 60 * 1000 = 86400000
+        alert(
+          "You need to wait 24 hours from your last claim to collect the next reward."
+        );
+        return;
+      }
+    }
+
+    if (day !== nextDay) {
+      alert("You need to claim the previous day's reward first.");
+      return;
+    }
+
+    // const response = await claimDailyReward(
+    //   userInfo.telegramId,
+    //   selectedDay.day,
+    //   selectedDay.reward
+    // );
+    // console.log(response);
+    // setUserInfo(response.user);
+    // setUserRewards(response.rewards);
   };
 
   return (
@@ -48,9 +91,10 @@ const DailyRewardsModal = ({ claimDailyReward, closeModal }) => {
                   ? "border-2 border-white"
                   : ""
               } ${
-                userInfo.dailyRewards[`day${index + 1}`]
+                userRewards.dailyRewards[`day${index + 1}`]
                   ? "claimed"
-                  : index + 1 !== Object.keys(userInfo.dailyRewards).length + 1
+                  : index + 1 !==
+                    Object.keys(userRewards.dailyRewards).length + 1
                   ? "locked-day"
                   : ""
               }`}
@@ -60,12 +104,13 @@ const DailyRewardsModal = ({ claimDailyReward, closeModal }) => {
                 <Image
                   src={Coin}
                   className="reward-icon"
+                  alt=""
                   height={30}
                   width={30}
                 />
                 <p className="daily-reward-amount">{rewardObj.reward}</p>
               </div>
-              {userInfo.dailyRewards[`day${index + 1}`] && (
+              {userRewards.dailyRewards[`day${index + 1}`] && (
                 <FaCheckCircle className="daily-reward-checkmark" />
               )}
             </div>
@@ -73,14 +118,18 @@ const DailyRewardsModal = ({ claimDailyReward, closeModal }) => {
         </div>
         <button
           className="reward-modalaction-button"
-          disabled={!selectedDay || selectedDay.day !== Object.keys(userInfo.dailyRewards).length + 1}
+          disabled={
+            !selectedDay ||
+            selectedDay.day !== Object.keys(userRewards.dailyRewards).length + 1
+          }
           onClick={() => {
             if (!selectedDay) return;
-            claimDailyReward(selectedDay.day, selectedDay.reward);
+            handleClaimDailyReward(selectedDay.day, selectedDay.reward);
             setSelectedDay(null);
           }}
         >
-          {selectedDay && selectedDay.day === Object.keys(userInfo.dailyRewards).length + 1
+          {selectedDay &&
+          selectedDay.day === Object.keys(userRewards.dailyRewards).length + 1
             ? "Claim"
             : "Come back tomorrow"}
         </button>

@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import "./BuyConfirmationModal.css";
-import { cardsContext } from "@/context/cardsContext";
 
 const BuyConfirmationModal = ({
   show,
@@ -10,7 +9,6 @@ const BuyConfirmationModal = ({
   balaceSufficient,
   getCardById,
 }) => {
-  const { unlockedCards } = useContext(cardsContext);
   if (!show) return null;
 
   return (

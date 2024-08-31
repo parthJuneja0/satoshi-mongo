@@ -28,16 +28,34 @@ export const TransactionsProvider = ({ children }) => {
         return response.data;
     }
 
-    const unlockNewCards = async (user, newCards) => {
+    const unlockNewCards = async (telegramId, newCards) => {
         const response = await axios.patch("/api/transactions/unlockNewCards", {
-            user,
+            telegramId,
             newCards
         });
         return response.data.cards;
     }
 
+    const completeTask = async (telegramId, task, reward) => {
+        const response = await axios.put("/api/transactions/completeTask", {
+            telegramId,
+            task,
+            reward
+        });
+        return response.data;
+    }
+
+    const claimDailyReward = async (telegramId, dayNumber, reward) => {
+        const response = await axios.put("/api/transactions/claimDailyReward", {
+            telegramId,
+            dayNumber,
+            reward
+        });
+        return response.data;
+    }
+
     return (
-        <transactionsContext.Provider value={{ shopPurchase, cardUpgrade, unlockNewCards }}>
+        <transactionsContext.Provider value={{ shopPurchase, cardUpgrade, unlockNewCards, completeTask, claimDailyReward }}>
             {children}
         </transactionsContext.Provider>
     );

@@ -17,13 +17,13 @@ import loadingImage from "@/assets/loading/page1.jpg";
 import ClaimReferalRewardModal from "@/components/ClaimReferalRewardModal/page";
 import { TbExposurePlus1 } from "react-icons/tb";
 import { userDataContext } from "@/context/userDataContext";
-import { userInfoContext } from "@/context/userInfoContext";
+// import { userInfoContext } from "@/context/userInfoContext";
 import ClaimCoinsAsPerYPH from "@/components/ClaimCoinsAsPerYPH/ClaimCoinsAsPerYPH";
 
 export default function Home() {
   const imgRef = useRef();
-  const { userWebData } = useContext(userDataContext);
-  const { userInfo, isReferred, setIsReferred } = useContext(userInfoContext);
+  const { userWebData, userInfo } = useContext(userDataContext);
+  // const { userInfo, isReferred, setIsReferred } = useContext(userInfoContext);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
@@ -82,11 +82,6 @@ export default function Home() {
     });
     setEnergyProfit(0);
   }, [energyProfit]);
-
-  useEffect(() => {
-    if (!clickPosition) return;
-    console.log(clickPosition);
-  }, [clickPosition]);
 
   // When card is clicked
   const handleCardClick = (e) => {
@@ -168,7 +163,7 @@ export default function Home() {
 
   return (
     <div className=" flex flex-col justify-center items-center bg-animated w-[450px]">
-      {isReferred && <ClaimReferalRewardModal />}
+      {/* {isReferred && <ClaimReferalRewardModal />} */}
       {!userInfo ? (
         <div className="h-full w-full">
           <Image src={loadingImage} alt="" />

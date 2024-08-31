@@ -10,6 +10,9 @@ export const UserDataProvider = ({ children }) => {
     const [userWebData, setUserWebData] = useState();
     const [isMobile, setIsMobile] = useState(true);
     const [userInfo, setUserInfo] = useState();
+    const [unlockedCards, setUnlockedCards] = useState();
+    const [userRewards, setUserRewards] = useState();
+    const [friends, setFriends] = useState();
 
     useEffect(() => {
         setIsMobile(isMobileDevice());
@@ -32,7 +35,7 @@ export const UserDataProvider = ({ children }) => {
                 });
             } else {
                 setUserWebData({
-                    userId: 1,
+                    userId: 100,
                     username: "Guest Account",
                     userPic: null,
                     premium: false,
@@ -43,24 +46,36 @@ export const UserDataProvider = ({ children }) => {
     }, [isMobile]);
 
     const createAccount = async () => {
-        const response = await axios.post("/api/users", {
+        const response = await axios.post("/api", {
             telegramId: userWebData.userId
         });
         setUserInfo(response.data.user);
+        setUnlockedCards(response.data.unlockedCards);
+        setUserRewards(response.data.rewards);
+        setFriends(response.data.friends);
     }
 
     const getUserData = async () => {
-        const response = await axios.get(`/api/users?id=${userWebData.userId}`);
+        const response = await axios.get(`/api?id=${userWebData.userId}`);
         if (!response.data.user) {
             createAccount();
         } else {
             setUserInfo(response.data.user);
+            setUnlockedCards(response.data.unlockedCards);
+            setUserRewards(response.data.rewards);
+            setFriends(response.data.friends);
         }
     }
 
     useEffect(() => {
         if (!userWebData) return;
         getUserData();
+        // if (userWebData.referalId) {
+        //     axios.post("/api/transaction/createReferral", {
+        //         user: userWebData.userId,
+        //         referalId: userWebData.referalId,
+        //     });
+        // }
     }, [userWebData]);
 
     // if (!isMobile) {
@@ -68,7 +83,7 @@ export const UserDataProvider = ({ children }) => {
     // }
 
     return (
-        <userDataContext.Provider value={{ userWebData, userInfo, setUserInfo }}>
+        <userDataContext.Provider value={{ userWebData, userInfo, setUserInfo, unlockedCards, setUnlockedCards, userRewards, setUserRewards, friends, setFriends }}>
             {children}
         </userDataContext.Provider>
     );

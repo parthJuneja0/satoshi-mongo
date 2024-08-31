@@ -61,7 +61,6 @@ import icon from "@/assets/coin.png";
 import Footer from "@/components/Footer/page";
 import { userDataContext } from "@/context/userDataContext";
 import { FaLock } from "react-icons/fa";
-import { cardsContext } from "@/context/cardsContext";
 import { transactionsContext } from "@/context/transactionsContext";
 
 const animalImages = {
@@ -335,8 +334,8 @@ const conditions = [
 ];
 
 const Mine = () => {
-  const { userInfo, setUserInfo } = useContext(userDataContext);
-  const { unlockedCards, setUnlockedCards } = useContext(cardsContext);
+  const { userInfo, setUserInfo, unlockedCards, setUnlockedCards } =
+    useContext(userDataContext);
   const { cardUpgrade, unlockNewCards } = useContext(transactionsContext);
 
   const [activeTab, setActiveTab] = useState("Animals");
@@ -423,7 +422,6 @@ const Mine = () => {
         (cardId) =>
           !unlockedCards.some((unlockedCard) => unlockedCard.cardId === cardId)
       );
-    console.log(dependenciesToUnlock);
     if (dependenciesToUnlock.length > 0) {
       // Find the details of the cards to unlock
       const cardsToUnlock = allCards
@@ -437,6 +435,7 @@ const Mine = () => {
   const unlockCards = async (user, newCards) => {
     const cards = await unlockNewCards(user, newCards);
     setUnlockedCards(cards);
+    setSelectedCard(null);
   };
 
   const handleCancel = () => {

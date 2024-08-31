@@ -2,11 +2,11 @@ import { UnlockedCards } from "@/lib/models/unlockedcards";
 import { NextResponse } from "next/server";
 
 export async function PATCH(req) {
-    const { user, newCards } = await req.json();
+    const { telegramId, newCards } = await req.json();
 
     try {
         const updatedDoc = await UnlockedCards.findOneAndUpdate(
-            { user },
+            { user: telegramId },
             { $push: { cards: { $each: newCards } } },
             { new: true }
         );
