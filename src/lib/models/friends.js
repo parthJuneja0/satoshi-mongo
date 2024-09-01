@@ -29,6 +29,4 @@ const FriendSchema = new mongoose.Schema({
   ],
 });
 
-const Friends = mongoose.models.friends || mongoose.model('friends', FriendSchema);
-
-export default Friends;
+export const Friends = mongoose.models.friends || mongoose.model('friends', FriendSchema);

@@ -54,8 +54,17 @@ export const TransactionsProvider = ({ children }) => {
         return response.data;
     }
 
+    const claimReferalReward = async (telegramId, userId, reward) => {
+        const response = await axios.put("/api/transactions/claimReferalReward", {
+            telegramId,
+            userId,
+            reward
+        });
+        return response.data;
+    }
+
     return (
-        <transactionsContext.Provider value={{ shopPurchase, cardUpgrade, unlockNewCards, completeTask, claimDailyReward }}>
+        <transactionsContext.Provider value={{ shopPurchase, cardUpgrade, unlockNewCards, completeTask, claimDailyReward, claimReferalReward }}>
             {children}
         </transactionsContext.Provider>
     );

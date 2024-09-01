@@ -13,6 +13,8 @@ export const UserDataProvider = ({ children }) => {
     const [unlockedCards, setUnlockedCards] = useState();
     const [userRewards, setUserRewards] = useState();
     const [friends, setFriends] = useState();
+    const [isReferred, setIsReferred] = useState();
+    const [referredBy, setReferredBy] = useState();
 
     useEffect(() => {
         setIsMobile(isMobileDevice());
@@ -35,7 +37,7 @@ export const UserDataProvider = ({ children }) => {
                 });
             } else {
                 setUserWebData({
-                    userId: 100,
+                    userId: 1,
                     username: "Guest Account",
                     userPic: null,
                     premium: false,
@@ -47,18 +49,32 @@ export const UserDataProvider = ({ children }) => {
 
     const createAccount = async () => {
         const response = await axios.post("/api", {
-            telegramId: userWebData.userId
+            telegramId: userWebData.userId,
+            username: userWebData.username,
+            coins: referredBy ? 5000 : 0,
+            referredBy
         });
         setUserInfo(response.data.user);
         setUnlockedCards(response.data.unlockedCards);
         setUserRewards(response.data.rewards);
         setFriends(response.data.friends);
+        setIsReferred(false);
     }
 
-    const getUserData = async () => {
+    const findReferredBy = async (referalId) => {
+        const response = await axios.get(`/api/transactions/findReferalUser?id=${referalId}`);
+        if (response.data.referredBy) setReferredBy(response.data.referredBy);
+        else setReferredBy(null);
+    }
+
+    const getUserData = async (referalId) => {
         const response = await axios.get(`/api?id=${userWebData.userId}`);
         if (!response.data.user) {
-            createAccount();
+            if (!referalId) createAccount(null);
+            else {
+                await findReferredBy(referalId);
+                setIsReferred(true);
+            }
         } else {
             setUserInfo(response.data.user);
             setUnlockedCards(response.data.unlockedCards);
@@ -69,13 +85,8 @@ export const UserDataProvider = ({ children }) => {
 
     useEffect(() => {
         if (!userWebData) return;
-        getUserData();
-        // if (userWebData.referalId) {
-        //     axios.post("/api/transaction/createReferral", {
-        //         user: userWebData.userId,
-        //         referalId: userWebData.referalId,
-        //     });
-        // }
+        if (userWebData.referalId) getUserData(userWebData.referalId);
+        else getUserData(null);
     }, [userWebData]);
 
     // if (!isMobile) {
@@ -83,7 +94,7 @@ export const UserDataProvider = ({ children }) => {
     // }
 
     return (
-        <userDataContext.Provider value={{ userWebData, userInfo, setUserInfo, unlockedCards, setUnlockedCards, userRewards, setUserRewards, friends, setFriends }}>
+        <userDataContext.Provider value={{ userWebData, isReferred, setIsReferred, referredBy, setReferredBy, userInfo, setUserInfo, unlockedCards, setUnlockedCards, userRewards, setUserRewards, friends, setFriends, createAccount }}>
             {children}
         </userDataContext.Provider>
     );

@@ -5,22 +5,20 @@ import Image from "next/image";
 import "./Friends.css";
 import { useRouter } from "next/navigation";
 import Coin from "@/assets/coin.png";
-// import { onValue, ref, update } from "firebase/database";
-// import { realtimeDb } from "@/config/firebase";
 import { CgProfile } from "react-icons/cg";
 import Footer from "@/components/Footer/page";
-// import { userDataContext } from "@/context/userDataContext";
-// import { userInfoContext } from "@/context/userInfoContext";
+import { userDataContext } from "@/context/userDataContext";
 import { MdContentCopy } from "react-icons/md";
 import { MdOutlineDone } from "react-icons/md";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { transactionsContext } from "@/context/transactionsContext";
 
 const Friends = () => {
   const router = useRouter();
-  // const { userWebData } = useContext(userDataContext);
-  // const { userInfo } = useContext(userInfoContext);
+  const { userWebData, setUserInfo, friends, setFriends } =
+    useContext(userDataContext);
+  const { claimReferalReward } = useContext(transactionsContext);
 
-  const [validFriends, setValidFriends] = useState([]);
   const [isCopied, setIsCopied] = React.useState(false);
   const [inviteLink, setInviteLink] = useState();
 
@@ -29,45 +27,12 @@ const Friends = () => {
     setTimeout(() => setIsCopied(false), 1500); // Reset after 1.5 seconds
   };
 
-  const handleClaim = (id) => {
-    update(ref(realtimeDb, `/users/${userWebData.userId}`), {
-      friends: {
-        ...userInfo.friends,
-        referredTo: {
-          ...userInfo.friends.referredTo,
-          [id]: {
-            ...userInfo.friends.referredTo[id],
-            claimed: true,
-          },
-        },
-      },
-      coins: userInfo.coins + (userWebData.premium ? 25000 : 10000),
-    });
-  };
-
-  // useEffect(() => {
-  //   if (!userWebData) return;
-  //   setInviteLink(
-  //     `http://t.me/SATOSHI_FARMS_BOT/Satoshi_Farms?startapp=${userWebData.userId}`
-  //   );
-  //   findValidFriends();
-  // }, [userWebData]);
-
-  const findValidFriends = () => {
-    onValue(
-      ref(realtimeDb, `/users/${userWebData.userId}/friends/referredTo`),
-      (snapshot) => {
-        setValidFriends([]);
-        const validUsers = [];
-        if (snapshot.exists()) {
-          Object.values(snapshot.val()).forEach(async (friend) => {
-            validUsers.push(friend);
-          });
-        }
-        setValidFriends(validUsers);
-      }
+  useEffect(() => {
+    if (!userWebData) return;
+    setInviteLink(
+      `http://t.me/SATOSHI_FARMS_BOT/Satoshi_Farms?startapp=${userWebData.userId}`
     );
-  };
+  }, [userWebData]);
 
   const handleTelegramInvite = () => {
     const telegramMessage = `Join me on this amazing app and receive bonuses!`;
@@ -76,6 +41,16 @@ const Friends = () => {
         inviteLink
       )}&text=${encodeURIComponent(telegramMessage)}`
     );
+  };
+
+  const handleClaim = async (userId) => {
+    const response = await claimReferalReward(
+      userWebData.userId,
+      userId,
+      userWebData.premium ? 25000 : 10000
+    );
+    setFriends(response.friends);
+    setUserInfo(response.user);
   };
 
   return (
@@ -131,32 +106,30 @@ const Friends = () => {
           </div>
           <div className="friends-list-container mt-8">
             <h2 className="text-gray-400 text-center text-sm">Friend List</h2>
-            {/* {userInfo && userInfo.friends && userInfo.friends.referredBy && (
+            {friends && friends.referredBy && (
               <div className="friends-referral-container mt-4">
                 <h3 className="text-md mb-2">Referred By</h3>
                 <div className="flex items-center bg-gray-700 p-3 rounded-md">
                   <CgProfile className="mr-4 w-6 h-6 text-white" />
-                  <p className="text-white">
-                    {userInfo.friends.referredBy.name}
-                  </p>
+                  <p className="text-white">{friends.referredBy.username}</p>
                 </div>
               </div>
             )}
-            {userInfo && userInfo.friends && userInfo.friends.referredTo && (
+            {friends && friends.referredTo.length > 0 && (
               <div className="friends-referral-container mt-4">
                 <h3 className="text-md mb-2">Referred To</h3>
-                {validFriends.map((friend, index) => (
+                {friends.referredTo.map((friend, index) => (
                   <div
                     key={index}
                     className="flex justify-between items-center bg-gray-700 p-3 rounded-md mt-2"
                   >
                     <CgProfile className="mr-4 w-6 h-6 text-white" />
-                    <p className="text-white">{friend.name}</p>
+                    <p className="text-white">{friend.username}</p>
                     {!friend.claimed ? (
                       <button
                         className="friends-claim-button"
                         onClick={() => {
-                          handleClaim(friend.id);
+                          handleClaim(friend.userId);
                         }}
                       >
                         Claim
@@ -169,7 +142,7 @@ const Friends = () => {
                   </div>
                 ))}
               </div>
-            )} */}
+            )}
           </div>
         </div>
       </div>

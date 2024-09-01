@@ -1,38 +1,14 @@
 import React, { useContext } from "react";
 import "../BuyConfirmationModal/BuyConfirmationModal.css";
-// import { get, ref, update } from "firebase/database";
-// import { realtimeDb } from "@/config/firebase";
-// import { userInfoContext } from "@/context/userInfoContext";
-// import { userDataContext } from "@/context/userDataContext";
+import { userDataContext } from "@/context/userDataContext";
 
 const ClaimReferalRewardModal = () => {
-  // const { userWebData } = useContext(userDataContext);
-  // const { createAccount, referredBy, setIsReferred } =
-  //   useContext(userInfoContext);
-
-  const createReferralAccount = async () => {
-    const friendRef = ref(
-      realtimeDb,
-      `/users/${userWebData.referalId}/friends`
-    );
-
-    const snapshot = await get(friendRef);
-    let referredToData = snapshot.exists() ? snapshot.val().referredTo : {};
-
-    referredToData = {
-      ...referredToData,
-      [userWebData.userId]: {
-        claimed: false,
-        name: userWebData.username,
-        id: userWebData.userId,
-      },
-    };
-
-    await update(friendRef, { referredTo: referredToData });
-
-    createAccount(referredBy, 5000);
-    setIsReferred(false);
-  };
+  const {
+    createAccount,
+    referredBy,
+    setIsReferred,
+    setReferredBy,
+  } = useContext(userDataContext);
 
   return (
     <>
@@ -41,28 +17,38 @@ const ClaimReferalRewardModal = () => {
         <div className="confirm-modal-header">
           <span className="title">Referal Bonus</span>
         </div>
-        {/* {referredBy ? ( */}
+        {referredBy ? (
           <div className="confirm-modal-body">
             <p>
-              Congratulations! You have recieved 5000 by your referal of your
-              friend {referredBy ? referredBy.name : ""}
+              Congratulations! You have recieved 5000 coins by referal of your
+              friend {referredBy.username}
             </p>
-            <p>Click on confirm to initialize your account</p>
+            <p>Click on confirm to create your account</p>
           </div>
-        {/* ) : (
-          <div>Invalid Referal Id</div>
-        )} */}
+        ) : (
+          <div className="confirm-modal-body">
+            User with this Referal Id do not exist
+          </div>
+        )}
         <div className="confirm-modal-footer">
           {referredBy ? (
-            <button className="confirm" onClick={createReferralAccount}>
+            <button
+              className="confirm"
+              onClick={() => {
+                createAccount();
+                setIsReferred(false);
+                setReferredBy(null);
+              }}
+            >
               Claim Reward
             </button>
           ) : (
             <button
               className="confirm"
               onClick={() => {
-                createAccount(null, 0);
+                createAccount();
                 setIsReferred(false);
+                setReferredBy(null);
               }}
             >
               Continue without referalId

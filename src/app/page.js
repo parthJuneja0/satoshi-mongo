@@ -17,20 +17,16 @@ import loadingImage from "@/assets/loading/page1.jpg";
 import ClaimReferalRewardModal from "@/components/ClaimReferalRewardModal/page";
 import { TbExposurePlus1 } from "react-icons/tb";
 import { userDataContext } from "@/context/userDataContext";
-// import { userInfoContext } from "@/context/userInfoContext";
 import ClaimCoinsAsPerYPH from "@/components/ClaimCoinsAsPerYPH/ClaimCoinsAsPerYPH";
 
 export default function Home() {
   const imgRef = useRef();
-  const { userWebData, userInfo } = useContext(userDataContext);
-  // const { userInfo, isReferred, setIsReferred } = useContext(userInfoContext);
+  const { userWebData, userInfo, isReferred } = useContext(userDataContext);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
   const [clickPosition, setClickPosition] = useState([]);
-  const [showAnimation, setShowAnimation] = useState(false);
   const [isClaimAvailable, setIsClaimAvailable] = useState(false);
-
   const [energyProfit, setEnergyProfit] = useState();
   const [coinProfit, setCoinProfit] = useState();
 
@@ -57,12 +53,12 @@ export default function Home() {
         setIsClaimAvailable(true);
       } else {
         // Update user's last session to mark as claimed
-        updateUserInfo(userWebData.userId, {
-          lastSession: {
-            ...userInfo.lastSession,
-            hasClaimed: true,
-          },
-        });
+        // updateUserInfo(userWebData.userId, {
+        //   lastSession: {
+        //     ...userInfo.lastSession,
+        //     hasClaimed: true,
+        //   },
+        // });
       }
     } else {
       setCoinProfit(Math.floor(userInfo.yieldPerHour * (10800 / 3600)));
@@ -74,19 +70,18 @@ export default function Home() {
   useEffect(() => {
     if (!energyProfit) return;
     // Update user's current energy
-    updateUserInfo(userWebData.userId, {
-      currentEnergy: Math.min(
-        userInfo.currentEnergy + energyProfit,
-        userInfo.totalEnergy
-      ),
-    });
+    // updateUserInfo(userWebData.userId, {
+    //   currentEnergy: Math.min(
+    //     userInfo.currentEnergy + energyProfit,
+    //     userInfo.totalEnergy
+    //   ),
+    // });
     setEnergyProfit(0);
   }, [energyProfit]);
 
   // When card is clicked
   const handleCardClick = (e) => {
     if (e.target.tagName !== "IMG" || !userInfo) return;
-    // setShowAnimation(true);
     const rect = e.target.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
@@ -106,18 +101,13 @@ export default function Home() {
     }, 100);
 
     // Update user's coins and energy
-    updateUserInfo(userWebData.userId, {
-      coins: userInfo.coins + userInfo.pointsToAdd,
-      currentEnergy: userInfo.currentEnergy - userInfo.pointsToAdd,
-    });
+    // updateUserInfo(userWebData.userId, {
+    //   coins: userInfo.coins + userInfo.pointsToAdd,
+    //   currentEnergy: userInfo.currentEnergy - userInfo.pointsToAdd,
+    // });
     if (navigator.vibrate) {
       navigator.vibrate(50);
     }
-    // setTimeout(() => {
-    //   setClickPosition((prevPositions) =>
-    //     prevPositions.filter((position) => position.id !== clickPosition[0]?.id)
-    //   );
-    // }, 500);
   };
 
   const toggleSettings = () => {
@@ -140,30 +130,9 @@ export default function Home() {
     }
   }
 
-  const updateUserInfo = async (userId, updatedData) => {
-    try {
-      const response = await fetch(`/api/users?id=${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update user info');
-      }
-
-      const data = await response.json();
-      console.log('User updated:', data.user);
-    } catch (error) {
-      console.error('Error updating user:', error);
-    }
-  };
-
   return (
     <div className=" flex flex-col justify-center items-center bg-animated w-[450px]">
-      {/* {isReferred && <ClaimReferalRewardModal />} */}
+      {isReferred && <ClaimReferalRewardModal />}
       {!userInfo ? (
         <div className="h-full w-full">
           <Image src={loadingImage} alt="" />
@@ -195,18 +164,18 @@ export default function Home() {
                           onClick={() => {
                             toggleLeaderboard();
                           }}
-                        >
-                          {userWebData && userWebData.userPic && (
-                            <Image
-                              alt=""
-                              src={userWebData.userPic}
-                              width={24}
-                              height={24}
-                              className="w-full"
-                            />
-                          )}
-                          {/* <FaUserCircle size={24} className="text-white" /> */}
-                        </div>
+                        >  </div>
+                        {userWebData && userWebData.userPic && (
+                          <Image
+                            alt=""
+                            src={userWebData.userPic}
+                            width={24}
+                            height={24}
+                            className="w-full"
+                          />
+                        )}
+                        {/* <FaUserCircle size={24} className="text-white" /> */}
+
                         {userInfo && (
                           <div className="flex items-center">
                             {userInfo ? (

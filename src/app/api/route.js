@@ -1,4 +1,4 @@
-import Friends from "@/lib/models/friends";
+import { Friends } from "@/lib/models/friends";
 import { Rewards } from "@/lib/models/rewards";
 import { UnlockedCards } from "@/lib/models/unlockedcards";
 import { User } from "@/lib/models/user";
@@ -32,14 +32,15 @@ export async function GET(req) {
 
 export async function POST(req) {
     try {
-        const { telegramId } = await req.json();
+        const { telegramId, username, referredBy } = await req.json();
 
         if (!telegramId) {
             return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
         }
 
         // Create the User document
-        let user = await User.create({ telegramId });
+        let user = await User.create({ telegramId, username, coins: referredBy ? 5000 : 0 });
+        console.log("User created")
 
         // Create the related documents
         const predefinedCards = [
@@ -60,6 +61,7 @@ export async function POST(req) {
             { cardId: "025", level: 1, profitAmount: 150, price: 1 },
         ];
         let unlockedCards = await UnlockedCards.create({ user: telegramId, cards: predefinedCards });
+        console.log("Cards created")
 
         let rewards = await Rewards.create({
             user: telegramId, dailyRewards: {
@@ -67,8 +69,30 @@ export async function POST(req) {
                 lastClaimed: {}
             }
         });
+        console.log("Rewards created")
 
-        let friends = await Friends.create({ user: telegramId });
+        let friends;
+        if (referredBy) {
+            await Friends.findOneAndUpdate(
+                { user: referredBy.userId },
+                {
+                    $push: {
+                        referredTo: {
+                            userId: telegramId,
+                            username,
+                            claimed: false
+                        }
+                    }
+                },
+                { new: true }
+            )
+            friends = await Friends.create({ user: telegramId, referredBy });
+            console.log(`Friends created and Referal added to ${referredBy.userId}`)
+        }
+        else {
+            friends = await Friends.create({ user: telegramId });
+            console.log(`Friends created`)
+        }
 
         return NextResponse.json({ user, unlockedCards, rewards, friends }, { status: 201 });
 
@@ -77,3 +101,7 @@ export async function POST(req) {
         return NextResponse.json({ error: 'Failed to create user and related documents' }, { status: 500 });
     }
 }
+
+// export async function DELETE(req) {
+
+// }
