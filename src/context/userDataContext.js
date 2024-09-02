@@ -41,7 +41,7 @@ export const UserDataProvider = ({ children }) => {
                     username: "Guest Account",
                     userPic: null,
                     premium: false,
-                    referalId: null
+                    referalId: 1
                 });
             }
         }
@@ -89,12 +89,20 @@ export const UserDataProvider = ({ children }) => {
         else getUserData(null);
     }, [userWebData]);
 
+    const resetAccount = async () => {
+        await axios.delete(`/api?id=${userWebData.userId}`);
+        setUserInfo(null);
+        setUnlockedCards([]);
+        setUserRewards({});
+        setFriends({});
+    }
+
     // if (!isMobile) {
     //     return <QRCodeComponent />;
     // }
 
     return (
-        <userDataContext.Provider value={{ userWebData, isReferred, setIsReferred, referredBy, setReferredBy, userInfo, setUserInfo, unlockedCards, setUnlockedCards, userRewards, setUserRewards, friends, setFriends, createAccount }}>
+        <userDataContext.Provider value={{ userWebData, isReferred, setIsReferred, referredBy, setReferredBy, userInfo, setUserInfo, unlockedCards, setUnlockedCards, userRewards, setUserRewards, friends, setFriends, createAccount, resetAccount }}>
             {children}
         </userDataContext.Provider>
     );

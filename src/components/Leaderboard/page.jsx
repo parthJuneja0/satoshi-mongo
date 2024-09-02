@@ -3,54 +3,58 @@ import React, { useContext, useEffect, useState } from "react";
 import { AiOutlineCrown } from "react-icons/ai";
 import { BiArrowBack } from "react-icons/bi";
 import "./Leaderboard.css";
-// import { onValue, ref } from "firebase/database";
 import Coin from "../../assets/coin.png";
 import Image from "next/image";
-// import { realtimeDb } from "@/config/firebase";
-// import { userInfoContext } from "@/context/userInfoContext";
+import { userDataContext } from "@/context/userDataContext";
+import axios from "axios";
 
 const Leaderboard = ({ toggleLeaderboard }) => {
-  const [players, setPlayers] = useState([]);
   const [topPlayers, setTopPlayers] = useState([]);
   const [myPosition, setMyPosition] = useState(null);
-  // const { userInfo } = useContext(userInfoContext);
+  const { userInfo } = useContext(userDataContext);
 
-  // useEffect(() => {
-  //   const unsubscribe = onValue(ref(realtimeDb, "/users"), (snapshot) => {
-  //     setPlayers(Object.values(snapshot.val()));
-  //   });
-  //   return () => unsubscribe();
-  // }, [ref(realtimeDb, "/users")]);
-
-  // useEffect(() => {
-  //   // Sort players and limit to top 100
-  //   const sortedPlayers = players
-  //     .slice()
-  //     .sort((a, b) => b.yieldPerHour - a.yieldPerHour);
-  //   setTopPlayers(sortedPlayers.slice(0, 100)); // Get the top 100 players
-
-  //   // Find your position (if applicable)
-  //   const myIndex = sortedPlayers.findIndex(
-  //     (player) => player.uid === userInfo.uid
-  //   );
-  //   setMyPosition(myIndex >= 0 && myIndex < 100 ? myIndex + 1 : null);
-  // }, [players, userInfo]);
-
-  // useEffect(() => {
-  //   // Sort players and limit to top 100
-  //   const sortedPlayers = players
-  //     .slice()
-  //     .sort((a, b) => b.yieldPerHour - a.yieldPerHour);
-  //   setTopPlayers(sortedPlayers.slice(0, 100)); // Get the top 100 players
-  // }, [players]);
-
-  function formatNumberWithK(num) {
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1) + "k";
-    } else {
-      return num;
+  useEffect(() => {
+    async function fetchData() {
+      const response = await axios.get("/api/leaderboard");
+      setTopPlayers(response.data.topPlayers);
     }
-  }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (topPlayers.length > 0) {
+      topPlayers.filter((player) => player.telegramId !== userInfo.telegramId);
+      const myIndex = topPlayers.findIndex(
+        (player) => player.telegramId === userInfo.telegramId
+      );
+      if (myIndex >= 0) {
+        setMyPosition(myIndex + 1);
+      } else {
+        setMyPosition("100+");
+      }
+    }
+  }, [topPlayers, userInfo.telegramId]);
+
+  // To debug 100+ position
+  // useEffect(() => {
+  //   if (topPlayers.length > 0) {
+  //     const filteredPlayers = topPlayers.filter(
+  //       (player) => player.telegramId !== userInfo.telegramId
+  //     );
+
+  //     const myIndex = filteredPlayers.findIndex(
+  //       (player) => player.telegramId === userInfo.telegramId
+  //     );
+
+  //     if (myIndex >= 0) {
+  //       setMyPosition(myIndex + 1);
+  //     } else {
+  //       setMyPosition("100+");
+  //     }
+
+  //     setTopPlayers(filteredPlayers); // Update topPlayers with filtered list
+  //   }
+  // }, [topPlayers, userInfo.telegramId]);
 
   return (
     <div className="leaderboard-container mx-auto flex flex-col justify-between items-center w-full h-full bg-black">
@@ -73,7 +77,7 @@ const Leaderboard = ({ toggleLeaderboard }) => {
                     )}
                   </div>
                   <span className="text-lg font-semibold text-white">
-                    {/* {userInfo.username} */}
+                    {userInfo.username}
                   </span>
                 </div>
                 <div className="flex items-center">
@@ -83,7 +87,7 @@ const Leaderboard = ({ toggleLeaderboard }) => {
                     className={`mr-2 text-yellow-400 h-10 w-10`}
                   />
                   <span className="text-xl font-bold text-white">
-                    {/* {formatNumberWithK(userInfo.yieldPerHour)} */}
+                    {userInfo.yieldPerHour}
                   </span>
                 </div>
               </li>
@@ -140,7 +144,7 @@ const Leaderboard = ({ toggleLeaderboard }) => {
                     }`}
                   />
                   <span className="text-xl font-bold text-white">
-                    {formatNumberWithK(player.yieldPerHour)}
+                    {player.yieldPerHour}
                   </span>
                 </div>
               </li>

@@ -102,6 +102,28 @@ export async function POST(req) {
     }
 }
 
-// export async function DELETE(req) {
+export async function DELETE(req) {
+    try {
+        const searchParams = req.nextUrl.searchParams
+        const telegramId = await searchParams.get('id')
 
-// }
+        if (!telegramId) {
+            return NextResponse.json({ error: 'Telegram ID is required' }, { status: 400 });
+        }
+
+        await User.findOneAndDelete({ telegramId });
+        console.log("User deleted")
+        await UnlockedCards.findOneAndDelete({ user: telegramId });
+        console.log("Cards deleted")
+        await Rewards.findOneAndDelete({ user: telegramId });
+        console.log("Rewards deleted")
+        await Friends.findOneAndDelete({ user: telegramId });
+        console.log("Friends deleted")
+
+        return NextResponse.json({ message: 'User deleted successfully' });
+
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json({ error: 'Failed to delete user and related documents' }, { status: 500 });
+    }
+}

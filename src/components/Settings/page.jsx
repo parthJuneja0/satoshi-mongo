@@ -1,10 +1,10 @@
 import React, { useContext, useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import "./Settings.css";
-// import { userInfoContext } from "@/context/userInfoContext";
+import { userDataContext } from "@/context/userDataContext";
 
 const Settings = ({ toggleSettings }) => {
-  // const { createAccount } = useContext(userInfoContext);
+  const { resetAccount } = useContext(userDataContext);
   // const [hapticFeedback, setHapticFeedback] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
@@ -13,7 +13,7 @@ const Settings = ({ toggleSettings }) => {
   };
 
   const handleDeleteAccount = () => {
-    // createAccount(null, 0);
+    resetAccount();
     toggleSettings();
   };
 
