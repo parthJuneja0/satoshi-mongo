@@ -41,7 +41,7 @@ export const UserDataProvider = ({ children }) => {
                     username: "Guest Account",
                     userPic: null,
                     premium: false,
-                    referalId: 1
+                    referalId: null
                 });
             }
         }

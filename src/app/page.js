@@ -18,10 +18,12 @@ import ClaimReferalRewardModal from "@/components/ClaimReferalRewardModal/page";
 import { TbExposurePlus1 } from "react-icons/tb";
 import { userDataContext } from "@/context/userDataContext";
 import ClaimCoinsAsPerYPH from "@/components/ClaimCoinsAsPerYPH/ClaimCoinsAsPerYPH";
+import axios from "axios";
 
 export default function Home() {
   const imgRef = useRef();
-  const { userWebData, userInfo, isReferred } = useContext(userDataContext);
+  const clickCountRef = useRef(0);
+  const { userWebData, userInfo, setUserInfo, isReferred } = useContext(userDataContext);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
@@ -82,6 +84,9 @@ export default function Home() {
   // When card is clicked
   const handleCardClick = (e) => {
     if (e.target.tagName !== "IMG" || !userInfo) return;
+
+    clickCountRef.current += 1;
+
     const rect = e.target.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
@@ -100,15 +105,45 @@ export default function Home() {
       imgRef.current.style.transform = "";
     }, 100);
 
-    // Update user's coins and energy
-    // updateUserInfo(userWebData.userId, {
-    //   coins: userInfo.coins + userInfo.pointsToAdd,
-    //   currentEnergy: userInfo.currentEnergy - userInfo.pointsToAdd,
-    // });
+    setUserInfo((prevUserInfo) => ({
+      ...prevUserInfo,
+      coins: prevUserInfo.coins + 1,
+      currentEnergy: Math.max(prevUserInfo.currentEnergy - 1, 0),
+    }));
+
+    // Debounced API call
+    debounceApiCall(userWebData.userId, clickCountRef.current);
+
     if (navigator.vibrate) {
       navigator.vibrate(50);
     }
   };
+
+  const debounceApiCall = useRef(
+    debounce((telegramId, clickCount) => {
+      axios.post("/api/transactions/clickEvent", {
+        telegramId,
+        clickCount
+      })
+        .then(response => {
+          // setUserInfo(response.data.user);
+          console.log(response.data.user);
+          clickCountRef.current = 0;
+        })
+        .catch(error => {
+          console.error("Error adding click transaction:", error);
+        });
+    }, 500) // Adjust the debounce delay as needed (500ms here)
+  ).current;
+
+  // Utility debounce function
+  function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
 
   const toggleSettings = () => {
     setSettingsOpen(!settingsOpen);
