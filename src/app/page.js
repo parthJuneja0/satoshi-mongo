@@ -106,14 +106,14 @@ export default function Home() {
       imgRef.current.style.transform = "";
     }, 100);
 
-    // setUserInfo((prevUserInfo) => ({
-    //   ...prevUserInfo,
-    //   coins: prevUserInfo.coins + 1,
-    //   currentEnergy: Math.max(prevUserInfo.currentEnergy - 1, 0),
-    // }));
+    setUserInfo((prevUserInfo) => ({
+      ...prevUserInfo,
+      coins: prevUserInfo.coins + 1,
+      currentEnergy: Math.max(prevUserInfo.currentEnergy - 1, 0),
+    }));
 
     // Debounced API call
-    // debounceApiCall(userWebData.userId, clickCountRef.current);
+    debounceApiCall(userWebData.userId, clickCountRef.current);
 
     if (navigator.vibrate) {
       navigator.vibrate(50);
@@ -168,138 +168,138 @@ export default function Home() {
   return (
     <div className=" flex flex-col justify-center items-center bg-animated w-[450px]">
       {isReferred && <ClaimReferalRewardModal />}
-      {/* {!userInfo ? (
+      {!userInfo ? (
         <div className="h-full w-full">
           <Image src={loadingImage} alt="" />
         </div>
-      ) : ( */}
-      <div className="flex-grow w-full">
-        <div className="bg-gradient-to-b from-gray-900 to-black flex justify-center">
-          <div className="w-full text-white h-screen font-bold flex flex-col relative">
-            {settingsOpen ? (
-              <Settings toggleSettings={toggleSettings} />
-            ) : leaderboardOpen ? (
-              <>
-                <Leaderboard toggleLeaderboard={toggleLeaderboard} />
-              </>
-            ) : (
-              <>
-                {isClaimAvailable && !userInfo.lastSession.hasClaimed && (
-                  <ClaimCoinsAsPerYPH
-                    coinProfit={coinProfit}
-                    setCoinProfit={setCoinProfit}
-                    setIsClaimAvailable={setIsClaimAvailable}
-                  />
-                )}
-                <div className="px-4 z-10">
-                  <div className="flex items-center justify-between pt-4">
-                    <div className="flex items-center space-x-2">
-                      <div
-                        className="p-1 rounded-lg bg-gradient-to-r h-10 w-10 from-purple-500 via-pink-500 to-red-500 cursor-pointer"
-                        onClick={() => {
-                          toggleLeaderboard();
-                        }}
-                      >  </div>
-                      {userWebData && userWebData.userPic && (
-                        <Image
-                          alt=""
-                          src={userWebData.userPic}
-                          width={24}
-                          height={24}
-                          className="w-full"
-                        />
-                      )}
-                      {/* <FaUserCircle size={24} className="text-white" /> */}
-
-                      {userInfo && (
-                        <div className="flex items-center">
-                          {userInfo ? (
-                            <h1 className="text-lg text-glow">
-                              {userWebData.username}
-                            </h1>
-                          ) : (
-                            <p>Loading username...</p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      {userWebData && userWebData.premium && (
-                        <MdOutlineWorkspacePremium />
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between mt-4">
-                    <div className="flex flex-col items-start w-1/3">
-                      <div className="flex justify-between w-full mb-1">
-                        <p className="text-xs text-yellow-300">Energy</p>
-                        {userInfo && (
-                          <p className="text-xs text-yellow-300">{`${userInfo.currentEnergy}/${userInfo.totalEnergy}`}</p>
+      ) : (
+        <div className="flex-grow w-full">
+          <div className="bg-gradient-to-b from-gray-900 to-black flex justify-center">
+            <div className="w-full text-white h-screen font-bold flex flex-col relative">
+              {settingsOpen ? (
+                <Settings toggleSettings={toggleSettings} />
+              ) : leaderboardOpen ? (
+                <>
+                  <Leaderboard toggleLeaderboard={toggleLeaderboard} />
+                </>
+              ) : (
+                <>
+                  {isClaimAvailable && !userInfo.lastSession.hasClaimed && (
+                    <ClaimCoinsAsPerYPH
+                      coinProfit={coinProfit}
+                      setCoinProfit={setCoinProfit}
+                      setIsClaimAvailable={setIsClaimAvailable}
+                    />
+                  )}
+                  <div className="px-4 z-10">
+                    <div className="flex items-center justify-between pt-4">
+                      <div className="flex items-center space-x-2">
+                        <div
+                          className="p-1 rounded-lg bg-gradient-to-r h-10 w-10 from-purple-500 via-pink-500 to-red-500 cursor-pointer"
+                          onClick={() => {
+                            toggleLeaderboard();
+                          }}
+                        >  </div>
+                        {userWebData && userWebData.userPic && (
+                          <Image
+                            alt=""
+                            src={userWebData.userPic}
+                            width={24}
+                            height={24}
+                            className="w-full"
+                          />
                         )}
-                      </div>
-                      {userInfo && (
-                        <div className="w-full h-3 bg-gray-200 rounded-full relative overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-green-400 to-green-600 transition-width duration-300 ease-in-out shadow-lg"
-                            style={{
-                              width: `${(userInfo.currentEnergy * 100) /
-                                userInfo.totalEnergy
-                                }%`,
-                              boxShadow: "0 0 8px rgba(0, 255, 0, 0.5)", // Added glow effect
-                            }}
-                          ></div>
-                          <div
-                            className="absolute top-0 transform -translate-x-1/2 h-3 w-3 rounded-full bg-green-500 shadow-md glow-pulse transition-left duration-300 ease-in-out"
-                            style={{
-                              left: `${(userInfo.currentEnergy * 100) /
-                                userInfo.totalEnergy
-                                }%`,
-                              boxShadow: "0 0 8px rgba(0, 255, 0, 0.5)", // Added glow effect
-                            }}
-                          ></div>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col items-center bg-gray-800 border-2 border-gray-700 rounded-full px-2 py-1 max-w-48 profit-area glassmorphic">
-                      <div className="flex items-center">
-                        <Image
-                          src={satoshiImage}
-                          alt="satoshi"
-                          width={24}
-                          height={24}
-                          className="mr-1 bright-3d-effect"
-                        />
-                        <div className="h-[24px] w-[1px] bg-gray-700 mx-1"></div>
-                        <div className="flex-1 text-center">
-                          <p className="text-xs text-gray-400 font-medium">
-                            Yield per hour
-                          </p>
-                          <div className="flex items-center justify-center space-x-1">
-                            <Image
-                              src={coinImage}
-                              alt="coin"
-                              width={18}
-                              height={18}
-                              className="bright-3d-effect"
-                            />
-                            {userInfo && (
-                              <p className="text-xs">
-                                {formatNumberWithK(userInfo.yieldPerHour)}
-                              </p>
+                        {/* <FaUserCircle size={24} className="text-white" /> */}
+
+                        {userInfo && (
+                          <div className="flex items-center">
+                            {userInfo ? (
+                              <h1 className="text-lg text-glow">
+                                {userWebData.username}
+                              </h1>
+                            ) : (
+                              <p>Loading username...</p>
                             )}
                           </div>
-                        </div>
-                        <div className="h-[24px] w-[1px] bg-gray-700 mx-1"></div>
-                        <IoMdSettings
-                          onClick={toggleSettings}
-                          className="w-6 h-6 text-yellow-400 cursor-pointer"
-                        />
+                        )}
+                      </div>
+                      <div>
+                        {userWebData && userWebData.premium && (
+                          <MdOutlineWorkspacePremium />
+                        )}
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between mt-4">
-                    {/* Level Button commented out */}
-                    {/* <div
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="flex flex-col items-start w-1/3">
+                        <div className="flex justify-between w-full mb-1">
+                          <p className="text-xs text-yellow-300">Energy</p>
+                          {userInfo && (
+                            <p className="text-xs text-yellow-300">{`${userInfo.currentEnergy}/${userInfo.totalEnergy}`}</p>
+                          )}
+                        </div>
+                        {userInfo && (
+                          <div className="w-full h-3 bg-gray-200 rounded-full relative overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-green-400 to-green-600 transition-width duration-300 ease-in-out shadow-lg"
+                              style={{
+                                width: `${(userInfo.currentEnergy * 100) /
+                                  userInfo.totalEnergy
+                                  }%`,
+                                boxShadow: "0 0 8px rgba(0, 255, 0, 0.5)", // Added glow effect
+                              }}
+                            ></div>
+                            <div
+                              className="absolute top-0 transform -translate-x-1/2 h-3 w-3 rounded-full bg-green-500 shadow-md glow-pulse transition-left duration-300 ease-in-out"
+                              style={{
+                                left: `${(userInfo.currentEnergy * 100) /
+                                  userInfo.totalEnergy
+                                  }%`,
+                                boxShadow: "0 0 8px rgba(0, 255, 0, 0.5)", // Added glow effect
+                              }}
+                            ></div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-col items-center bg-gray-800 border-2 border-gray-700 rounded-full px-2 py-1 max-w-48 profit-area glassmorphic">
+                        <div className="flex items-center">
+                          <Image
+                            src={satoshiImage}
+                            alt="satoshi"
+                            width={24}
+                            height={24}
+                            className="mr-1 bright-3d-effect"
+                          />
+                          <div className="h-[24px] w-[1px] bg-gray-700 mx-1"></div>
+                          <div className="flex-1 text-center">
+                            <p className="text-xs text-gray-400 font-medium">
+                              Yield per hour
+                            </p>
+                            <div className="flex items-center justify-center space-x-1">
+                              <Image
+                                src={coinImage}
+                                alt="coin"
+                                width={18}
+                                height={18}
+                                className="bright-3d-effect"
+                              />
+                              {userInfo && (
+                                <p className="text-xs">
+                                  {formatNumberWithK(userInfo.yieldPerHour)}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="h-[24px] w-[1px] bg-gray-700 mx-1"></div>
+                          <IoMdSettings
+                            onClick={toggleSettings}
+                            className="w-6 h-6 text-yellow-400 cursor-pointer"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mt-4">
+                      {/* Level Button commented out */}
+                      {/* <div
                         className="flex items-center cursor-pointer"
                         onClick={() => {
                           toggleLeaderboard();
@@ -316,63 +316,63 @@ export default function Home() {
                           </div> 
                         </div>
                       </div> */}
+                    </div>
                   </div>
-                </div>
-                <div className="flex-grow mt-4 mb-16 bg-gradient-to-b from-gray-800 to-gray-900 rounded-t-[48px] relative top-glow z-0">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    {userInfo && (
-                      <div className="flex items-center text-3xl bottom-24 text-white mb-7  ">
-                        <Image
-                          src={coinImage}
-                          alt="coin"
-                          width={50}
-                          height={50}
-                          className=" bright-3d-effect"
-                        />
-                        {Math.floor(userInfo.coins)}
-                      </div>
-                    )}
-                    <div
-                      className={`relative flex flex-col gap-3 items-center justify-center cursor-pointer w-80 h-80 `}
-                      // onTouchEnd={(e) => {
+                  <div className="flex-grow mt-4 mb-16 bg-gradient-to-b from-gray-800 to-gray-900 rounded-t-[48px] relative top-glow z-0">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      {userInfo && (
+                        <div className="flex items-center text-3xl bottom-24 text-white mb-7  ">
+                          <Image
+                            src={coinImage}
+                            alt="coin"
+                            width={50}
+                            height={50}
+                            className=" bright-3d-effect"
+                          />
+                          {Math.floor(userInfo.coins)}
+                        </div>
+                      )}
+                      <div
+                        className={`relative flex flex-col gap-3 items-center justify-center cursor-pointer w-80 h-80 `}
+                        onTouchEnd={(e) => {
+                          handleCardClick(e);
+                        }}
+                      // onClick={(e) => {
                       //   handleCardClick(e);
                       // }}
-                      onClick={(e) => {
-                        handleCardClick(e);
-                      }}
-                    >
-                      <div
-                        className="relative w-full h-full main-character"
-                        ref={imgRef}
                       >
-                        <Image src={mainCharacter} alt="Main Character" />
+                        <div
+                          className="relative w-full h-full main-character"
+                          ref={imgRef}
+                        >
+                          <Image src={mainCharacter} alt="Main Character" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                {clickPosition.map((position) => (
-                  <div
-                    key={position.id}
-                    className="click-animation"
-                    style={{
-                      left: `${position.x}px`,
-                      top: `${position.y}px`,
-                      animation: "hamsterPop 0.5s ease-out forwards", // Use the pop animation we defined
-                      transform: "translate(-50%, -50%)", // Ensures it's centered on the click
-                      position: "absolute", // Absolute positioning for correct placement
-                    }}
-                    onAnimationEnd={() => handleAnimationEnd(position.id)}
-                  >
-                    <TbExposurePlus1 />
-                  </div>
-                ))}
+                  {clickPosition.map((position) => (
+                    <div
+                      key={position.id}
+                      className="click-animation"
+                      style={{
+                        left: `${position.x}px`,
+                        top: `${position.y}px`,
+                        animation: "hamsterPop 0.5s ease-out forwards", // Use the pop animation we defined
+                        transform: "translate(-50%, -50%)", // Ensures it's centered on the click
+                        position: "absolute", // Absolute positioning for correct placement
+                      }}
+                      onAnimationEnd={() => handleAnimationEnd(position.id)}
+                    >
+                      <TbExposurePlus1 />
+                    </div>
+                  ))}
 
-              </>
-            )}
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      {/* )} */}
+      )}
       {userInfo && <Footer />}
     </div>
   );
