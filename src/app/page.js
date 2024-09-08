@@ -335,7 +335,7 @@ export default function Home() {
                     )}
                     <div
                       className={`relative flex flex-col gap-3 items-center justify-center cursor-pointer w-80 h-80 `}
-                      onTouchStart={(e) => {
+                      onTouchEnd={(e) => {
                         handleCardClick(e);
                       }}
                     // onClick={(e) => {
