@@ -337,9 +337,9 @@ export default function Home() {
                       onTouchEnd={(e) => {
                         handleCardClick(e);
                       }}
-                      onClick={(e) => {
-                        handleCardClick(e);
-                      }}
+                      // onClick={(e) => {
+                      //   handleCardClick(e);
+                      // }}
                     >
                       <div
                         className="relative w-full h-full main-character"
