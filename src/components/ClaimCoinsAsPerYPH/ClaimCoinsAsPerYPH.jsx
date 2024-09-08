@@ -1,27 +1,19 @@
 import React, { useContext } from "react";
 import "../BuyConfirmationModal/BuyConfirmationModal.css";
-// import { userDataContext } from "@/context/userDataContext";
-// import { userInfoContext } from "@/context/userInfoContext";
-// import { ref, update } from "firebase/database";
-// import { realtimeDb } from "@/config/firebase";
+import { userDataContext } from "@/context/userDataContext";
+import { syncContext } from "@/context/syncContext";
 
 const ClaimCoinsAsPerYPH = ({
   coinProfit,
   setIsClaimAvailable,
   setCoinProfit,
 }) => {
-  // const { userWebData } = useContext(userDataContext);
-  // const { userInfo } = useContext(userInfoContext);
+  const { userInfo, setUserInfo } = useContext(userDataContext);
+  const { addCoins } = useContext(syncContext);
 
-  const grantReward = () => {
-    update(ref(realtimeDb, `/users/${userWebData.userId}`), {
-      coins: userInfo.coins + coinProfit,
-      lastSession: {
-        ...userInfo.lastSession,
-        hasClaimed: true,
-      },
-    });
-    setCoinProfit(0);
+  const grantReward = async () => {
+    const response = await addCoins(userInfo.telegramId, coinProfit);
+    setUserInfo(response);
     setIsClaimAvailable(false);
   };
 

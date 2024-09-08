@@ -19,11 +19,14 @@ import { TbExposurePlus1 } from "react-icons/tb";
 import { userDataContext } from "@/context/userDataContext";
 import ClaimCoinsAsPerYPH from "@/components/ClaimCoinsAsPerYPH/ClaimCoinsAsPerYPH";
 import axios from "axios";
+import { syncContext } from "@/context/syncContext";
+import { set } from "mongoose";
 
 export default function Home() {
   const imgRef = useRef();
   const clickCountRef = useRef(0);
   const { userWebData, userInfo, setUserInfo, isReferred } = useContext(userDataContext);
+  const { addCurrentEnergy, recordHasClaimed } = useContext(syncContext);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
@@ -35,13 +38,14 @@ export default function Home() {
   useEffect(() => {
     if (
       !userInfo ||
-      !userInfo.lastSession ||
       userInfo.lastSession.hasClaimed === true
     )
       return;
     const differenceInMilliseconds =
       Date.now() - userInfo.lastSession.lastOnline;
     const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
+    if (differenceInSeconds <= 0) return;
+
     setEnergyProfit(differenceInSeconds);
 
     // 3 hrs = 3*3600 = 10800 seconds
@@ -50,17 +54,13 @@ export default function Home() {
         userInfo.yieldPerHour * (differenceInSeconds / 3600)
       );
       if (profit > 0) {
-        if (coinProfit > 0) return;
+        // if (coinProfit > 0) return;
         setCoinProfit(profit);
         setIsClaimAvailable(true);
       } else {
-        // Update user's last session to mark as claimed
-        // updateUserInfo(userWebData.userId, {
-        //   lastSession: {
-        //     ...userInfo.lastSession,
-        //     hasClaimed: true,
-        //   },
-        // });
+        (async () => {
+          await recordHasClaimed(userWebData.userId);
+        })();
       }
     } else {
       setCoinProfit(Math.floor(userInfo.yieldPerHour * (10800 / 3600)));
@@ -71,15 +71,38 @@ export default function Home() {
   // Add energy when user comes online
   useEffect(() => {
     if (!energyProfit) return;
-    // Update user's current energy
-    // updateUserInfo(userWebData.userId, {
-    //   currentEnergy: Math.min(
-    //     userInfo.currentEnergy + energyProfit,
-    //     userInfo.totalEnergy
-    //   ),
-    // });
-    setEnergyProfit(0);
+    (async () => {
+      const response = await addCurrentEnergy(userWebData.userId, energyProfit);
+      setUserInfo(response);
+    })();
   }, [energyProfit]);
+
+  // Energy Refill
+  useEffect(() => {
+    if (!userInfo) return;
+    const intervalId = setInterval(() => {
+      setUserInfo((prevUserInfo) => ({
+        ...prevUserInfo,
+        currentEnergy: Math.min(
+          prevUserInfo.currentEnergy + 1,
+          prevUserInfo.totalEnergy
+        ),
+      }));
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [userInfo]);
+
+  //     // Increase coins as per yield per hour
+  useEffect(() => {
+    if (!userInfo || userInfo.yieldPerHour === 0) return;
+    const intervalId = setInterval(() => {
+      setUserInfo((prevUserInfo) => ({
+        ...prevUserInfo,
+        coins: prevUserInfo.coins + prevUserInfo.yieldPerHour / 3600,
+      }));
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [userInfo]);
 
   // When card is clicked
   const handleCardClick = (e) => {
@@ -126,8 +149,8 @@ export default function Home() {
         telegramId,
         clickCount
       })
-        .then(response => {
-          console.log(response.data.user);
+        .then(() => {
+          console.log("Debounced")
           clickCountRef.current = 0;
         })
         .catch(error => {
@@ -334,12 +357,12 @@ export default function Home() {
                       )}
                       <div
                         className={`relative flex flex-col gap-3 items-center justify-center cursor-pointer w-80 h-80 `}
-                        onTouchEnd={(e) => {
+                        // onTouchEnd={(e) => {
+                        //   handleCardClick(e);
+                        // }}
+                        onClick={(e) => {
                           handleCardClick(e);
                         }}
-                      // onClick={(e) => {
-                      //   handleCardClick(e);
-                      // }}
                       >
                         <div
                           className="relative w-full h-full main-character"
@@ -363,7 +386,7 @@ export default function Home() {
                       }}
                       onAnimationEnd={() => handleAnimationEnd(position.id)}
                     >
-                      <TbExposurePlus1 />
+                      <TbExposurePlus1 size={40} />
                     </div>
                   ))}
 

@@ -42,6 +42,16 @@ const userSchema = new mongoose.Schema({
             type: Number,
             default: 0
         }
+    },
+    lastSession: {
+        hasClaimed: {
+            type: Boolean,
+            default: false
+        },
+        lastOnline: {
+            type: Number,
+            default: () => Date.now()
+        }
     }
 });
 
