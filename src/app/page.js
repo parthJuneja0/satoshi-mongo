@@ -357,13 +357,16 @@ export default function Home() {
                       style={{
                         left: `${position.x}px`,
                         top: `${position.y}px`,
+                        animation: "hamsterPop 0.5s ease-out forwards", // Use the pop animation we defined
+                        transform: "translate(-50%, -50%)", // Ensures it's centered on the click
+                        position: "absolute", // Absolute positioning for correct placement
                       }}
                       onAnimationEnd={() => handleAnimationEnd(position.id)}
                     >
                       <TbExposurePlus1 />
-                      {/* <Image src={coinImage} alt="coin" width={30} height={30} className="inline text-yellow-400 bright-3d-effect" /> */}
                     </div>
                   ))}
+
                 </>
               )}
             </div>
