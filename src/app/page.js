@@ -334,12 +334,12 @@ export default function Home() {
                     )}
                     <div
                       className={`relative flex flex-col gap-3 items-center justify-center cursor-pointer w-80 h-80 `}
-                      onTouchEnd={(e) => {
-                        handleCardClick(e);
-                      }}
-                      // onClick={(e) => {
+                      // onTouchEnd={(e) => {
                       //   handleCardClick(e);
                       // }}
+                      onClick={(e) => {
+                        handleCardClick(e);
+                      }}
                     >
                       <div
                         className="relative w-full h-full main-character"
