@@ -20,7 +20,6 @@ import { userDataContext } from "@/context/userDataContext";
 import ClaimCoinsAsPerYPH from "@/components/ClaimCoinsAsPerYPH/ClaimCoinsAsPerYPH";
 import axios from "axios";
 import { syncContext } from "@/context/syncContext";
-import { set } from "mongoose";
 
 export default function Home() {
   const imgRef = useRef();
@@ -91,6 +90,53 @@ export default function Home() {
     }, 1000);
     return () => clearInterval(intervalId);
   }, [userInfo]);
+
+  // useEffect(() => {
+  //   if (!userInfo) return;
+
+  //   const intervalId = setInterval(() => {
+  //     setUserInfo((prevUserInfo) => {
+  //       const newEnergy = Math.min(prevUserInfo.currentEnergy + 1, prevUserInfo.totalEnergy);
+
+  //       return {
+  //         ...prevUserInfo,
+  //         currentEnergy: newEnergy,
+  //       };
+  //     });
+  //   }, 1000);
+
+  //   // Sync with the database every 50 seconds
+  //   const syncIntervalId = setInterval(() => {
+  //     syncEnergyWithDB(userInfo.currentEnergy); // Sync the current energy with the database
+  //   }, 5000); // 50 seconds in milliseconds
+
+  //   return () => {
+  //     clearInterval(intervalId); // Clear the energy increment interval
+  //     clearInterval(syncIntervalId); // Clear the sync interval
+  //   };
+  // }, [userInfo]);
+
+  // // Function to sync energy with the database
+  // const syncEnergyWithDB = async (currentEnergy) => {
+  //   try {
+  //     const response = await fetch('/api/sync-energy', {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ currentEnergy }),
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Failed to sync energy with the database');
+  //     }
+
+  //     console.log('Energy successfully synced');
+  //   } catch (error) {
+  //     console.error('Error syncing energy:', error);
+  //   }
+  // };
+
 
   //     // Increase coins as per yield per hour
   useEffect(() => {

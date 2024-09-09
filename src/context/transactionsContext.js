@@ -63,8 +63,15 @@ export const TransactionsProvider = ({ children }) => {
         return response.data;
     }
 
+    const resetDailyRewards = async (telegramId) => {
+        const response = await axios.put("/api/transactions/resetDailyRewards", {
+            telegramId
+        });
+        return response.data;
+    }
+
     return (
-        <transactionsContext.Provider value={{ shopPurchase, cardUpgrade, unlockNewCards, completeTask, claimDailyReward, claimReferalReward }}>
+        <transactionsContext.Provider value={{ shopPurchase, cardUpgrade, unlockNewCards, completeTask, claimDailyReward, claimReferalReward, resetDailyRewards }}>
             {children}
         </transactionsContext.Provider>
     );
