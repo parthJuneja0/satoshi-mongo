@@ -76,7 +76,11 @@ export const UserDataProvider = ({ children }) => {
                 setIsReferred(true);
             }
         } else {
-            setUserInfo(response.data.user);
+            // Toggle hasClaimed
+            const userData = await axios.put("/api/sync/toggleHasClaimed", {
+                telegramId: userWebData.userId,
+            });
+            setUserInfo(userData.data.user);
             setUnlockedCards(response.data.unlockedCards);
             setUserRewards(response.data.rewards);
             setFriends(response.data.friends);

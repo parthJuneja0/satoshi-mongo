@@ -18,6 +18,7 @@ export async function PUT(req) {
                         coins: {
                             $max: [{ $add: ['$coins', coinProfit] }, 0]
                         },
+                        'lastSession.lastOnline': Date.now(),
                         'lastSession.hasClaimed': true
                     }
                 }

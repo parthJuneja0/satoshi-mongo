@@ -60,6 +60,7 @@ export async function POST(req) {
             { cardId: "024", level: 1, profitAmount: 180, price: 2 },
             { cardId: "025", level: 1, profitAmount: 150, price: 1 },
         ];
+
         let unlockedCards = await UnlockedCards.create({ user: telegramId, cards: predefinedCards });
         console.log("Cards created")
 

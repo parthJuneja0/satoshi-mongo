@@ -9,7 +9,8 @@ export async function POST(req) {
             {
                 $inc: {
                     coins: clickCount,
-                    currentEnergy: -clickCount
+                    currentEnergy: -clickCount,
+                    lastOnline: Date.now()
                 }
             },
             { new: true }

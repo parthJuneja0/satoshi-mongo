@@ -3,11 +3,7 @@ import "../BuyConfirmationModal/BuyConfirmationModal.css";
 import { userDataContext } from "@/context/userDataContext";
 import { syncContext } from "@/context/syncContext";
 
-const ClaimCoinsAsPerYPH = ({
-  coinProfit,
-  setIsClaimAvailable,
-  setCoinProfit,
-}) => {
+const ClaimCoinsAsPerYPH = ({ coinProfit, setIsClaimAvailable }) => {
   const { userInfo, setUserInfo } = useContext(userDataContext);
   const { addCoins } = useContext(syncContext);
 

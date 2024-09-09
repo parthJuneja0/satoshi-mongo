@@ -13,10 +13,11 @@ export const SyncProvider = ({ children }) => {
         return response.data.user;
     }
 
-    const recordHasClaimed = async (telegramId) => {
-        await axios.put("/api/sync/recordClaimed", {
+    const toggleHasClaimed = async (telegramId) => {
+        const response = await axios.put("/api/sync/toggleHasClaimed", {
             telegramId,
         });
+        return response.data.user;
     }
 
     const addCoins = async (telegramId, coinProfit) => {
@@ -28,7 +29,7 @@ export const SyncProvider = ({ children }) => {
     }
 
     return (
-        <syncContext.Provider value={{ addCurrentEnergy, recordHasClaimed, addCoins }}>
+        <syncContext.Provider value={{ addCurrentEnergy, toggleHasClaimed, addCoins }}>
             {children}
         </syncContext.Provider>
     );

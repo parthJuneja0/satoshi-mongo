@@ -4,16 +4,12 @@ import Image from "next/image";
 import Leaderboard from "../components/Leaderboard/page";
 import Settings from "../components/Settings/page";
 import Footer from "@/components/Footer/page";
-
-// Icon imports
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
 import mainCharacter from "../assets/farmbutton.png";
 import coinImage from "../assets/coin.png";
 import satoshiImage from "../assets/satoshi.png";
 import loadingImage from "@/assets/loading/page1.jpg";
-
-// Database imports
 import ClaimReferalRewardModal from "@/components/ClaimReferalRewardModal/page";
 import { TbExposurePlus1 } from "react-icons/tb";
 import { userDataContext } from "@/context/userDataContext";
@@ -25,7 +21,7 @@ export default function Home() {
   const imgRef = useRef();
   const clickCountRef = useRef(0);
   const { userWebData, userInfo, setUserInfo, isReferred } = useContext(userDataContext);
-  const { addCurrentEnergy, recordHasClaimed } = useContext(syncContext);
+  const { addCurrentEnergy, toggleHasClaimed } = useContext(syncContext);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [leaderboardOpen, setLeaderboardOpen] = useState(false);
@@ -35,32 +31,28 @@ export default function Home() {
   const [coinProfit, setCoinProfit] = useState();
 
   useEffect(() => {
-    if (
-      !userInfo ||
-      userInfo.lastSession.hasClaimed === true
-    )
-      return;
-    const differenceInMilliseconds =
-      Date.now() - userInfo.lastSession.lastOnline;
+    if (!userInfo || userInfo.lastSession.hasClaimed) return;
+    const differenceInMilliseconds = Date.now() - userInfo.lastSession.lastOnline;
     const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
-    if (differenceInSeconds <= 0) return;
+
+    // For debugging purposes
+    // const differenceInSeconds = 50000;
 
     setEnergyProfit(differenceInSeconds);
 
+    const profit = Math.floor(
+      userInfo.yieldPerHour * (differenceInSeconds / 3600)
+    );
+    if (profit <= 0) {
+      (async () => {
+        await toggleHasClaimed(userWebData.userId);
+      })();
+      return;
+    };
     // 3 hrs = 3*3600 = 10800 seconds
     if (differenceInSeconds < 10800) {
-      const profit = Math.floor(
-        userInfo.yieldPerHour * (differenceInSeconds / 3600)
-      );
-      if (profit > 0) {
-        // if (coinProfit > 0) return;
-        setCoinProfit(profit);
-        setIsClaimAvailable(true);
-      } else {
-        (async () => {
-          await recordHasClaimed(userWebData.userId);
-        })();
-      }
+      setCoinProfit(profit);
+      setIsClaimAvailable(true);
     } else {
       setCoinProfit(Math.floor(userInfo.yieldPerHour * (10800 / 3600)));
       setIsClaimAvailable(true);
@@ -77,78 +69,129 @@ export default function Home() {
   }, [energyProfit]);
 
   // Energy Refill
-  useEffect(() => {
-    if (!userInfo) return;
-    const intervalId = setInterval(() => {
-      setUserInfo((prevUserInfo) => ({
-        ...prevUserInfo,
-        currentEnergy: Math.min(
-          prevUserInfo.currentEnergy + 1,
-          prevUserInfo.totalEnergy
-        ),
-      }));
-    }, 1000);
-    return () => clearInterval(intervalId);
-  }, [userInfo]);
-
   // useEffect(() => {
   //   if (!userInfo) return;
-
   //   const intervalId = setInterval(() => {
-  //     setUserInfo((prevUserInfo) => {
-  //       const newEnergy = Math.min(prevUserInfo.currentEnergy + 1, prevUserInfo.totalEnergy);
-
-  //       return {
-  //         ...prevUserInfo,
-  //         currentEnergy: newEnergy,
-  //       };
-  //     });
+  //     setUserInfo((prevUserInfo) => ({
+  //       ...prevUserInfo,
+  //       currentEnergy: Math.min(
+  //         prevUserInfo.currentEnergy + 1,
+  //         prevUserInfo.totalEnergy
+  //       ),
+  //     }));
   //   }, 1000);
-
-  //   // Sync with the database every 50 seconds
-  //   const syncIntervalId = setInterval(() => {
-  //     syncEnergyWithDB(userInfo.currentEnergy); // Sync the current energy with the database
-  //   }, 5000); // 50 seconds in milliseconds
-
-  //   return () => {
-  //     clearInterval(intervalId); // Clear the energy increment interval
-  //     clearInterval(syncIntervalId); // Clear the sync interval
-  //   };
+  //   return () => clearInterval(intervalId);
   // }, [userInfo]);
 
-  // // Function to sync energy with the database
-  // const syncEnergyWithDB = async (currentEnergy) => {
-  //   try {
-  //     const response = await fetch('/api/sync-energy', {
-  //       method: 'PUT',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ currentEnergy }),
-  //     });
+  const energySyncThreshold = 30; // Sync every 50 energy increments
+  const [energyToSync, setEnergyToSync] = useState(0); // Track unsynced energy
 
-  //     if (!response.ok) {
-  //       throw new Error('Failed to sync energy with the database');
-  //     }
-
-  //     console.log('Energy successfully synced');
-  //   } catch (error) {
-  //     console.error('Error syncing energy:', error);
-  //   }
-  // };
-
-
-  //     // Increase coins as per yield per hour
   useEffect(() => {
-    if (!userInfo || userInfo.yieldPerHour === 0) return;
+    if (!userInfo) return;
+
     const intervalId = setInterval(() => {
-      setUserInfo((prevUserInfo) => ({
-        ...prevUserInfo,
-        coins: prevUserInfo.coins + prevUserInfo.yieldPerHour / 3600,
-      }));
+      setUserInfo((prevUserInfo) => {
+        const newEnergy = Math.min(
+          prevUserInfo.currentEnergy + 1,
+          prevUserInfo.totalEnergy
+        );
+
+        // Track unsynced energy
+        setEnergyToSync(newEnergy);
+
+        return {
+          ...prevUserInfo,
+          currentEnergy: newEnergy,
+        };
+      });
     }, 1000);
+
     return () => clearInterval(intervalId);
   }, [userInfo]);
+
+  // Sync energy with the backend when energyToSync reaches threshold
+  useEffect(() => {
+    if (energyToSync % energySyncThreshold === 0 && energyToSync !== 0) {
+      syncEnergyWithBackend(energyToSync);
+    }
+  }, [energyToSync]);
+
+  const syncEnergyWithBackend = async (currentEnergy) => {
+    try {
+      (async () => {
+        const response = await axios.put("/api/refill/energy", {
+          telegramId: userWebData.userId,
+          energyCount: userInfo.currentEnergy,
+        })
+        console.log("Energy synced :", currentEnergy);
+      })();
+    } catch (error) {
+      console.error('Error syncing energy:', error);
+    }
+  };
+
+
+  // Increase coins as per yield per hour
+  // useEffect(() => {
+  //   if (!userInfo || userInfo.yieldPerHour === 0) return;
+  //   const intervalId = setInterval(() => {
+  //     setUserInfo((prevUserInfo) => ({
+  //       ...prevUserInfo,
+  //       coins: prevUserInfo.coins + prevUserInfo.yieldPerHour / 3600,
+  //     }));
+  //   }, 1000);
+  //   return () => clearInterval(intervalId);
+  // }, [userInfo]);
+
+  const coinSyncThreshold = 10; // Sync after 10 coin increments
+  const [coinsToSync, setCoinsToSync] = useState(0); // Track unsynced coins
+  const [lastSyncedCoins, setLastSyncedCoins] = useState(0); // Track the last synced coin value
+
+  useEffect(() => {
+    if (!userInfo || userInfo.yieldPerHour === 0) return;
+
+    const intervalId = setInterval(() => {
+      setUserInfo((prevUserInfo) => {
+        const newCoins = prevUserInfo.coins + prevUserInfo.yieldPerHour / 3600;
+
+        // Update unsynced coins but don't sync yet
+        setCoinsToSync(newCoins);
+
+        return {
+          ...prevUserInfo,
+          coins: newCoins,
+        };
+      });
+    }, 1000); // Increment coins every second
+
+    return () => clearInterval(intervalId);
+  }, [userInfo]);
+
+  // Sync coins with the backend when coinsToSync reaches the threshold
+  useEffect(() => {
+    const coinDifference = Math.floor(coinsToSync) - Math.floor(lastSyncedCoins);
+
+    if (coinDifference >= coinSyncThreshold) {
+      syncCoinsWithBackend(Math.floor(coinsToSync));
+    }
+  }, [coinsToSync]);
+
+  const syncCoinsWithBackend = async (currentCoins) => {
+    try {
+      await axios.put("/api/refill/coins", {
+        telegramId: userWebData.userId,
+        coinCount: currentCoins, // Send the current coins count
+      });
+
+      console.log("Coins synced:", currentCoins);
+
+      // Update the last synced coins after successful sync
+      setLastSyncedCoins(currentCoins);
+    } catch (error) {
+      console.error('Error syncing coins:', error);
+    }
+  };
+
 
   // When card is clicked
   const handleCardClick = (e) => {
@@ -253,10 +296,9 @@ export default function Home() {
                 </>
               ) : (
                 <>
-                  {isClaimAvailable && !userInfo.lastSession.hasClaimed && (
+                  {isClaimAvailable && (
                     <ClaimCoinsAsPerYPH
                       coinProfit={coinProfit}
-                      setCoinProfit={setCoinProfit}
                       setIsClaimAvailable={setIsClaimAvailable}
                     />
                   )}
