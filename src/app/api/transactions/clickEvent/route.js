@@ -1,8 +1,12 @@
+import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/user";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
+    await connectToDatabase();
+
     const { telegramId, clickCount } = await req.json();
+
     try {
         const user = await User.findOneAndUpdate(
             { telegramId },

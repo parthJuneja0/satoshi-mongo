@@ -1,8 +1,11 @@
+import { connectToDatabase } from "@/lib/db";
 import { Rewards } from "@/lib/models/rewards";
 import { User } from "@/lib/models/user";
 import { NextResponse } from "next/server";
 
 export async function PUT(req) {
+    await connectToDatabase();
+
     const { telegramId, task, reward } = await req.json();
 
     if (!['youtube', 'telegram', 'twitter', 'satoshiTV'].includes(task)) {

@@ -1,3 +1,4 @@
+import { connectToDatabase } from "@/lib/db";
 import { Friends } from "@/lib/models/friends";
 import { Rewards } from "@/lib/models/rewards";
 import { UnlockedCards } from "@/lib/models/unlockedcards";
@@ -5,6 +6,8 @@ import { User } from "@/lib/models/user";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
+    await connectToDatabase();
+
     const searchParams = req.nextUrl.searchParams
     const telegramId = await searchParams.get('id')
     try {
@@ -26,11 +29,13 @@ export async function GET(req) {
 
     } catch (error) {
         console.log(error)
-        return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
+        return NextResponse.json({ error }, { status: 500 });
     }
 }
 
 export async function POST(req) {
+    await connectToDatabase();
+
     try {
         const { telegramId, username, referredBy } = await req.json();
 

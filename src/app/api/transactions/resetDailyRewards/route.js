@@ -1,7 +1,10 @@
+import { connectToDatabase } from '@/lib/db';
 import { Rewards } from '@/lib/models/rewards';
 import { NextResponse } from 'next/server';
 
 export async function PUT(req) {
+    await connectToDatabase();
+
     const { telegramId } = await req.json();
 
     try {

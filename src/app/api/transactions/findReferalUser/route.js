@@ -1,7 +1,10 @@
+import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/user";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
+    await connectToDatabase();
+
     const searchParams = req.nextUrl.searchParams
     const referalId = await searchParams.get('id')
     try {

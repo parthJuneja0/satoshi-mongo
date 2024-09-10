@@ -1,9 +1,11 @@
+import { connectToDatabase } from '@/lib/db';
 import { User } from '@/lib/models/user';
 import { NextResponse } from 'next/server';
 
 export async function PUT(req) {
-    try {
+    await connectToDatabase();
 
+    try {
         const { telegramId, energyProfit } = await req.json();
 
         if (!telegramId || energyProfit === undefined) {

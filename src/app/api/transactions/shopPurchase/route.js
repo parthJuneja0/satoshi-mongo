@@ -1,7 +1,10 @@
+import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/user";
 import { NextResponse } from "next/server";
 
 export async function PUT(req) {
+    await connectToDatabase();
+
     try {
         const { telegramId, coinsToRemove, utilToAdd, util } = await req.json();
         const user = await User.findOne({ telegramId });

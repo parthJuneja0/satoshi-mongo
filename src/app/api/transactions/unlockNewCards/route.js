@@ -1,7 +1,10 @@
+import { connectToDatabase } from "@/lib/db";
 import { UnlockedCards } from "@/lib/models/unlockedcards";
 import { NextResponse } from "next/server";
 
 export async function PATCH(req) {
+    await connectToDatabase();
+
     const { telegramId, newCards } = await req.json();
 
     try {

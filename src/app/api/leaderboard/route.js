@@ -1,7 +1,10 @@
+import { connectToDatabase } from "@/lib/db";
 import { User } from "@/lib/models/user";
 import { NextResponse } from "next/server";
 
 export async function GET() {
+    await connectToDatabase();
+
     try {
         const topPlayers = await User.find({})
             .sort({ yieldPerHour: -1 }) // Sort by yieldPerHour in descending order

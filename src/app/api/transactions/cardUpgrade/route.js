@@ -1,8 +1,11 @@
 import { User } from "@/lib/models/user";
 import { UnlockedCards } from "@/lib/models/unlockedcards";
 import { NextResponse } from "next/server";
+import { connectToDatabase } from "@/lib/db";
 
 export async function PATCH(req) {
+    await connectToDatabase();
+
     try {
         const { telegramId, cardId, utilToRemove, util, yieldPerHourToAdd, newProfitAmount, newPrice } = await req.json();
         const user = await User.findOne({ telegramId });
