@@ -39,12 +39,12 @@ const DailyRewardsModal = ({ closeModal }) => {
 
   useEffect(() => {
     if (!userRewards) return;
-    // const timeDifference =
-    //   Date.now() - userRewards.dailyRewards.lastClaimed.timestamp;
+    const timeDifference =
+      Date.now() - userRewards.dailyRewards.lastClaimed.timestamp;
 
     // For debugging purposes
     // const timeDifference = 864000;
-    const timeDifference = 864000001;
+    // const timeDifference = 864000001;
 
     if (timeDifference < 86400000) return;
 
