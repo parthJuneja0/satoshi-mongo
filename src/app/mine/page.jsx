@@ -337,6 +337,7 @@ const Mine = () => {
   const { userInfo, setUserInfo, unlockedCards, setUnlockedCards } =
     useContext(userDataContext);
   const { cardUpgrade, unlockNewCards } = useContext(transactionsContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [activeTab, setActiveTab] = useState("Animals");
   const [showBuyModal, setShowBuyModal] = useState(false);
@@ -384,6 +385,7 @@ const Mine = () => {
   };
 
   const handleConfirmBuy = async () => {
+    setIsLoading(true);
     const newProfitAmount = calculateProfit(
       selectedCard.profitAmount,
       getCardById(selectedCard.cardId).profitAmount,
@@ -406,6 +408,7 @@ const Mine = () => {
     setShowBuyModal(false);
     setUserInfo(response.user);
     setUnlockedCards(response.cards);
+    setIsLoading(false);  
   };
 
   useEffect(() => {
@@ -615,6 +618,7 @@ const Mine = () => {
           card={selectedCard}
           getCardById={getCardById}
           balaceSufficient={balaceSufficient}
+          isLoading={isLoading}
         />
         <UnlockConditionModal
           show={showUnlockModal}

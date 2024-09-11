@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import "./BuyConfirmationModal.css";
 
 const BuyConfirmationModal = ({
@@ -8,6 +8,7 @@ const BuyConfirmationModal = ({
   card,
   balaceSufficient,
   getCardById,
+  isLoading,  // Receive isLoading prop
 }) => {
   if (!show) return null;
 
@@ -17,7 +18,7 @@ const BuyConfirmationModal = ({
       <div className="confirm-modal">
         <div className="confirm-modal-header">
           <span className="title">Confirm Purchase</span>
-          <button className="close" onClick={onClose}>
+          <button className="close" onClick={onClose} disabled={isLoading}>
             &times;
           </button>
         </div>
@@ -29,15 +30,19 @@ const BuyConfirmationModal = ({
         </div>
         <div className="confirm-modal-footer">
           {balaceSufficient ? (
-            <button className="confirm" onClick={onConfirm}>
-              Confirm
+            <button className="confirm" onClick={onConfirm} disabled={isLoading}>
+              {isLoading ? (
+                <div className="button-spinner"></div>  // Spinner inside button
+              ) : (
+                "Confirm"
+              )}
             </button>
           ) : (
-            <button className=" bg-gray-500 text-white">
-              Insuffcient {card.reqUtil}
+            <button className=" bg-gray-500 text-white" disabled>
+              Insufficient {card.reqUtil}
             </button>
           )}
-          <button className="cancel" onClick={onClose}>
+          <button className="cancel" onClick={onClose} disabled={isLoading}>
             Cancel
           </button>
         </div>
