@@ -36,31 +36,7 @@ const DailyRewardsModal = ({ closeModal }) => {
     setUserRewards(response.rewards);
     setAvailableClaim(null);
   };
-  const formatTime = (milliseconds) => {
-    const totalSeconds = Math.floor(milliseconds / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    return `${hours} hours and ${minutes} minutes`;
-  };
 
-  const handleRewardClick = (day) => {
-    if (day !== availableClaim?.day) {
-      // Get the last claim timestamp and calculate time remaining
-      const lastClaimedTime = userRewards.dailyRewards.lastClaimed.timestamp;
-      const nextClaimTime = lastClaimedTime + 86400000; // 24 hours (in milliseconds) after last claimed
-      const remainingTime = nextClaimTime - Date.now();
-
-      if (remainingTime > 0) {
-        // Convert remaining time to hours and minutes
-        const timeUntilNextClaim = formatTime(remainingTime);
-        alert(
-          `You can claim the next reward in ${timeUntilNextClaim}. Please come back later!`
-        );
-      } else {
-        alert("This reward is not available to claim yet!");
-      }
-    }
-  };
   useEffect(() => {
     if (!userRewards) return;
     const timeDifference =
@@ -105,8 +81,6 @@ const DailyRewardsModal = ({ closeModal }) => {
                   ? "locked-day"
                   : ""
               }`}
-                // Add an onClick handler to check availability
-                onClick={() => handleRewardClick(index + 1)}
             >
               <div className="reward-day-circle">
                 <Image

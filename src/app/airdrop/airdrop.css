@@ -29,21 +29,3 @@
     transform: scale(1.1);
   }
 }
-.airdrop-connect-btn {
-  background: linear-gradient(90deg, rgba(255,215,0,1) 0%, rgba(255,165,0,1) 100%);
-  color: white;
-  box-shadow: 0px 4px 15px rgba(255, 165, 0, 0.5);
-  border: none;
-  cursor: pointer;
-  outline: none;
-}
-
-.airdrop-connect-btn:hover {
-  background: linear-gradient(90deg, rgba(255,165,0,1) 0%, rgba(255,215,0,1) 100%);
-  transform: scale(1.05);
-}
-
-.airdrop-connect-btn:active {
-  transform: scale(0.95);
-  box-shadow: none;
-}

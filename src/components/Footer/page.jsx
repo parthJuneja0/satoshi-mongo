@@ -14,16 +14,11 @@ import SatoshiImage from "../../assets/satoshi.png";
 
 const Footer = () => {
   const pathname = usePathname();
-  // function getPathName() {
-  //   if (pathname === "/") return "exchange";
-  //   else return pathname.split("/")[2];
-  // }
   function getPathName() {
-    const parts = pathname.split("/").filter(Boolean); // Filter out empty strings
-    if (parts.length === 0) return "exchange"; // For root path "/"
-    return parts[0]; // For paths like "/mine", "/shop", etc.
+    if (pathname === "/") return "exchange";
+    else return pathname.split("/")[2];
   }
-  
+
   const selectedPage = getPathName();
 
   const array = [
@@ -99,7 +94,7 @@ const Footer = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-gray-900 flex justify-between items-center z-50 rounded-t-3xl text-xs p-2 md:w-auto md:mx-auto">
+    <div className="fixed bottom-[20px] left-1/2 transform -translate-x-1/2 w-full max-w-md bg-gray-900 flex justify-between items-center z-50 rounded-t-3xl text-xs p-2 md:w-auto md:mx-auto">
       {array.map((item, index) => (
         <Link
           href={item.name === "exchange" ? "/" : `/${item.name}`}
