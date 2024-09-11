@@ -6,7 +6,7 @@ import Footer from "@/components/Footer/page";
 import "./airdrop.css";
 // import { TonConnect, isMobile } from "@tonconnect/sdk";
 
-// const Airdrop = () => {
+const Airdrop = () => {
 //   const [tonConnect, setTonConnect] = useState(null);
 //   const [walletAddress, setWalletAddress] = useState(null);
 
@@ -77,6 +77,6 @@ import "./airdrop.css";
       <Footer />
     </div>
   );
-
+}
 
 export default Airdrop;
