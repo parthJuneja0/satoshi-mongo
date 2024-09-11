@@ -486,6 +486,7 @@ const Mine = () => {
                       width="auto"
                       height="auto"
                       className="card-image"
+                      loading="lazy"
                     />
                   )}
                   {activeTab === "Trees" && (
@@ -495,6 +496,7 @@ const Mine = () => {
                       width="auto"
                       height="auto"
                       className="card-image"
+                      loading="lazy"
                     />
                   )}
                   {activeTab === "Tools" && (
@@ -504,6 +506,7 @@ const Mine = () => {
                       width="auto"
                       height="auto"
                       className="card-image"
+                      loading="lazy"
                     />
                   )}
                 </div>
@@ -520,6 +523,7 @@ const Mine = () => {
                     width={15}
                     height={15}
                     className="icon-margin"
+                    loading="lazy"
                   />
                   {unlockedCards && getCardById(card.cardId)
                     ? getCardById(card.cardId).profitAmount
@@ -543,6 +547,7 @@ const Mine = () => {
                   className="w-5 h-5 mx-1"
                   height="auto"
                   width="auto"
+                  loading="lazy"
                 />
               )}
               {activeTab === "Trees" && (
@@ -552,6 +557,7 @@ const Mine = () => {
                   className="w-5 h-5 mx-1"
                   height="auto"
                   width="auto"
+                  loading="lazy"
                 />
               )}
               {activeTab === "Tools" && (
@@ -561,6 +567,7 @@ const Mine = () => {
                   className="w-5 h-5 mx-1"
                   height="auto"
                   width="auto"
+                  loading="lazy"
                 />
               )}
               <p>

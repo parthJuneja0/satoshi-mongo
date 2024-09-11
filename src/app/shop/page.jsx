@@ -99,6 +99,11 @@ const Shop = () => {
     });
   };
 
+  useEffect(() => {
+    if (!costs) return;
+    console.log(costs);
+  }, [costs]);
+
   const purchaseItem = async (key) => {
     const cost = products[key].price * quantities[key];
     if (Math.floor(userInfo.coins) >= cost) {
@@ -110,6 +115,7 @@ const Shop = () => {
       );
       setUserInfo(userData);
       setQuantities({ ...quantities, [key]: 1 });
+      updateCosts(key, 1);
     } else {
       alert("Not enough coins");
     }

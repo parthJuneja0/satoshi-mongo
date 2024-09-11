@@ -20,7 +20,7 @@ import { syncContext } from "@/context/syncContext";
 export default function Home() {
   const imgRef = useRef();
   const clickCountRef = useRef(0);
-  const { userWebData, userInfo, setUserInfo, isReferred } = useContext(userDataContext);
+  const { userWebData, userInfo, setUserInfo, isReferred, unlockedCards, userRewards, friends, } = useContext(userDataContext);
   const { addCurrentEnergy, toggleHasClaimed } = useContext(syncContext);
 
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -68,21 +68,6 @@ export default function Home() {
     })();
   }, [energyProfit]);
 
-  // Energy Refill
-  // useEffect(() => {
-  //   if (!userInfo) return;
-  //   const intervalId = setInterval(() => {
-  //     setUserInfo((prevUserInfo) => ({
-  //       ...prevUserInfo,
-  //       currentEnergy: Math.min(
-  //         prevUserInfo.currentEnergy + 1,
-  //         prevUserInfo.totalEnergy
-  //       ),
-  //     }));
-  //   }, 1000);
-  //   return () => clearInterval(intervalId);
-  // }, [userInfo]);
-
   const energySyncThreshold = 30; // Sync every 50 energy increments
   const [energyToSync, setEnergyToSync] = useState(0); // Track unsynced energy
 
@@ -129,19 +114,6 @@ export default function Home() {
       console.error('Error syncing energy:', error);
     }
   };
-
-
-  // Increase coins as per yield per hour
-  // useEffect(() => {
-  //   if (!userInfo || userInfo.yieldPerHour === 0) return;
-  //   const intervalId = setInterval(() => {
-  //     setUserInfo((prevUserInfo) => ({
-  //       ...prevUserInfo,
-  //       coins: prevUserInfo.coins + prevUserInfo.yieldPerHour / 3600,
-  //     }));
-  //   }, 1000);
-  //   return () => clearInterval(intervalId);
-  // }, [userInfo]);
 
   const coinSyncThreshold = 10; // Sync after 10 coin increments
   const [coinsToSync, setCoinsToSync] = useState(0); // Track unsynced coins
@@ -195,9 +167,7 @@ export default function Home() {
 
   // When card is clicked
   const handleCardClick = (e) => {
-    console.log(e);
-    if (e.target.tagName !== "IMG") return;
-    // if (e.target.tagName !== "IMG" || !userInfo) return;
+    if (e.target.tagName !== "IMG" || !userInfo || userInfo.currentEnergy <= 0) return;
 
     clickCountRef.current += 1;
 
@@ -281,7 +251,7 @@ export default function Home() {
   return (
     <div className=" flex flex-col justify-center items-center bg-animated w-[450px]">
       {isReferred && <ClaimReferalRewardModal />}
-      {!userInfo ? (
+      {!userInfo || !unlockedCards || !userRewards || !friends ? (
         <div className="h-full w-full">
           <Image src={loadingImage} alt="" />
         </div>

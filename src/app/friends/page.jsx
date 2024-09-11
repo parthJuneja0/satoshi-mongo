@@ -132,7 +132,7 @@ const Friends = () => {
                           handleClaim(friend.userId);
                         }}
                       >
-                        Claim
+                        {userWebData.premium ? 25000 : 10000}
                       </button>
                     ) : (
                       <button className="friends-claimed-button">
