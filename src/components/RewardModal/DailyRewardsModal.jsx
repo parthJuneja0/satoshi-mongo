@@ -63,6 +63,10 @@ const DailyRewardsModal = ({ closeModal }) => {
   };
   useEffect(() => {
     if (!userRewards) return;
+
+    if (userRewards.dailyRewards.lastClaimed.day === 0)
+      setAvailableClaim(rewardsArray.find((obj) => obj.day === 1));
+
     const timeDifference =
       Date.now() - userRewards.dailyRewards.lastClaimed.timestamp;
 
@@ -105,8 +109,8 @@ const DailyRewardsModal = ({ closeModal }) => {
                   ? "locked-day"
                   : ""
               }`}
-                // Add an onClick handler to check availability
-                onClick={() => handleRewardClick(index + 1)}
+              // Add an onClick handler to check availability
+              onClick={() => handleRewardClick(index + 1)}
             >
               <div className="reward-day-circle">
                 <Image
