@@ -5,16 +5,16 @@ import Coin from "../../assets/coin.png";
 import Image from "next/image";
 import { userDataContext } from "@/context/userDataContext";
 import { transactionsContext } from "@/context/transactionsContext";
-
+import NotificationModal from "@/components/NotificationModal/NotificationModal";
 const DailyRewardsModal = ({ closeModal }) => {
   const { userInfo, setUserInfo, userRewards, setUserRewards } =
     useContext(userDataContext);
   const { claimDailyReward, resetDailyRewards } =
     useContext(transactionsContext);
 
-  // Define the array of rewards
-  const rewardsArray = [
-    { day: 1, reward: 1000 },
+    // Define the array of rewards
+    const rewardsArray = [
+      { day: 1, reward: 1000 },
     { day: 2, reward: 2500 },
     { day: 3, reward: 5000 },
     { day: 4, reward: 10000 },
@@ -22,9 +22,11 @@ const DailyRewardsModal = ({ closeModal }) => {
     { day: 6, reward: 100000 },
     { day: 7, reward: 500000 },
   ];
-
+  
+  const [notificationTimestamp, setNotificationTimestamp] = useState(null);
   const [availableClaim, setAvailableClaim] = useState();
-
+  const [notificationMessage, setNotificationMessage] = useState(""); // State to store the notification message
+  const [showNotification, setShowNotification] = useState(false); // State to control modal visibility
   const handleClaimDailyReward = async () => {
     if (!userInfo) return;
     const response = await claimDailyReward(
@@ -53,11 +55,15 @@ const DailyRewardsModal = ({ closeModal }) => {
       if (remainingTime > 0) {
         // Convert remaining time to hours and minutes
         const timeUntilNextClaim = formatTime(remainingTime);
-        alert(
+        setNotificationMessage(
           `You can claim the next reward in ${timeUntilNextClaim}. Please come back later!`
         );
+        setNotificationTimestamp(nextClaimTime);
+        setShowNotification(true); // Show the modal
       } else {
-        alert("This reward is not available to claim yet!");
+        setNotificationMessage("This reward is not available to claim yet!");
+        setNotificationTimestamp(null);
+        setShowNotification(true); // Show the modal
       }
     }
   };
@@ -147,6 +153,13 @@ const DailyRewardsModal = ({ closeModal }) => {
           </button>
         )}
       </div>
+      {showNotification && (
+        <NotificationModal
+          message={notificationMessage}
+          timestamp={notificationTimestamp}
+          closeModal={() => setShowNotification(false)}
+        />
+      )}
     </div>
   );
 };
