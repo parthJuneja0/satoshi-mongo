@@ -470,7 +470,7 @@ export default function Home() {
                         top: `${position.y}px`,
                         animation: "hamsterPop 0.5s ease-out forwards", // Use the pop animation we defined
                         transform: "translate(-50%, -50%)", // Ensures it's centered on the click
-                        position: "absolute", // Absolute positioning for correct placement
+                        position: "relative", // Absolute positioning for correct placement
                       }}
                       onAnimationEnd={() => handleAnimationEnd(position.id)}
                     >
