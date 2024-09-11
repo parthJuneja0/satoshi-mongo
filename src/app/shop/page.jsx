@@ -35,6 +35,11 @@ const products = {
 const Shop = () => {
   const { userInfo, setUserInfo } = useContext(userDataContext);
   const { shopPurchase } = useContext(transactionsContext);
+  const [loading, setLoading] = useState({
+    food: false,
+    fertilizer: false,
+    oil: false,
+  });
 
   const [quantities, setQuantities] = useState({
     food: 1,
@@ -107,12 +112,14 @@ const Shop = () => {
   const purchaseItem = async (key) => {
     const cost = products[key].price * quantities[key];
     if (Math.floor(userInfo.coins) >= cost) {
+      setLoading({ ...loading, [key]: true });
       const userData = await shopPurchase(
         userInfo.telegramId,
         cost,
         quantities[key],
         key
       );
+      setLoading({ ...loading, [key]: false }); 
       setUserInfo(userData);
       setQuantities({ ...quantities, [key]: 1 });
       updateCosts(key, 1);
@@ -230,18 +237,25 @@ const Shop = () => {
                     </button>
                   ) : (
                     <button
-                      className={`button-price`}
-                      onClick={() => purchaseItem(item.key)}
-                    >
-                      <Image
-                        src={Coin}
-                        alt="Coin"
-                        height={24}
-                        width={24}
-                        className="mr-1 "
-                      />{" "}
-                      {costs && costs[item.key]}
-                    </button>
+                    className={`button-price`}
+                    onClick={() => purchaseItem(item.key)}
+                    disabled={loading[item.key]}  // Disable button while loading
+                  >
+                    {loading[item.key] ? (
+                      <div className="button-spinner"></div>  // Show loader
+                    ) : (
+                      <>
+                        <Image
+                          src={Coin}
+                          alt="Coin"
+                          height={24}
+                          width={24}
+                          className="mr-1 "
+                        />{" "}
+                        {costs && costs[item.key]}
+                      </>
+                    )}
+                  </button>
                   )}
                 </div>
               </div>
