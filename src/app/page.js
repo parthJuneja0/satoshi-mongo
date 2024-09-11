@@ -16,7 +16,7 @@ import { userDataContext } from "@/context/userDataContext";
 import ClaimCoinsAsPerYPH from "@/components/ClaimCoinsAsPerYPH/ClaimCoinsAsPerYPH";
 import axios from "axios";
 import { syncContext } from "@/context/syncContext";
-
+import profile from "../assets/profile.png";
 export default function Home() {
   const imgRef = useRef();
   const clickCountRef = useRef(0);
@@ -276,16 +276,24 @@ export default function Home() {
                   <div className="px-4 z-10">
                     <div className="flex items-center justify-between pt-4">
                       <div className="flex items-center space-x-2">
-                        <div
-                          className="p-1 rounded-lg bg-gradient-to-r h-10 w-10 from-purple-500 via-pink-500 to-red-500 cursor-pointer"
+                      <div>
+                        <Image 
+                          alt=""
+                          src={profile}
+                          width={24}
+                          height={24}
+                          className="w-full"
+                          loading="lazy"
                           onClick={() => {
                             toggleLeaderboard();
                           }}
-                        >  </div>
+                        />
+                      </div>
+                      {/* </div> */}
                         {userWebData && userWebData.userPic && (
                           <Image
                             alt=""
-                            src={userWebData.userPic}
+                            src={profile}
                             width={24}
                             height={24}
                             className="w-full"
