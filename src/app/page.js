@@ -195,18 +195,19 @@ export default function Home() {
 
   // When card is clicked
   const handleCardClick = (e) => {
+    console.log(e);
     if (e.target.tagName !== "IMG") return;
     // if (e.target.tagName !== "IMG" || !userInfo) return;
 
     clickCountRef.current += 1;
 
     const rect = e.target.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
+    const x = e.changedTouches[0].clientX - rect.left - rect.width / 2;
+    const y = e.changedTouches[0].clientY - rect.top - rect.height / 2;
     // Update position for the animation
     setClickPosition((prevPositions) => [
       ...prevPositions,
-      { id: Date.now(), x: e.clientX, y: e.clientY },
+      { id: Date.now(), x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY },
     ]);
 
     //Update position for the animation
@@ -448,9 +449,6 @@ export default function Home() {
                         onTouchEnd={(e) => {
                           handleCardClick(e);
                         }}
-                      // onClick={(e) => {
-                      //   handleCardClick(e);
-                      // }}
                       >
                         <div
                           className="relative w-full h-full main-character"
@@ -470,7 +468,7 @@ export default function Home() {
                         top: `${position.y}px`,
                         animation: "hamsterPop 0.5s ease-out forwards", // Use the pop animation we defined
                         transform: "translate(-50%, -50%)", // Ensures it's centered on the click
-                        position: "absolute", // Absolute positioning for correct placement
+                        position: "absolute"// Absolute positioning for correct placement
                       }}
                       onAnimationEnd={() => handleAnimationEnd(position.id)}
                     >
