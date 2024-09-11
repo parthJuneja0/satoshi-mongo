@@ -30,7 +30,7 @@ const Friends = () => {
   useEffect(() => {
     if (!userWebData) return;
     setInviteLink(
-      `http://t.me/SATOSHI_FARMS_BOT/Satoshi_Farms?startapp=${userWebData.userId}`
+      `https://t.me/parth_test_bot/start?startapp=${userWebData.userId}`
     );
   }, [userWebData]);
 
