@@ -146,6 +146,7 @@ const Earn = () => {
                   alt="Telegram"
                   className="earn-task-icon-telegram"
                   width={40}
+                  loading="lazy"
                   height={40}
                 />
               </div>
@@ -158,6 +159,7 @@ const Earn = () => {
                     alt="Coins"
                     className="earn-reward-icon"
                     width={30}
+                    loading="lazy"
                     height={30}
                   />
                   <span className="earn-span-value ">{rewards.telegram}</span>
@@ -178,6 +180,7 @@ const Earn = () => {
                 src={Reward}
                 alt="Reward"
                 className="earn-glow-effect-yellow earn-mr-4"
+                loading="lazy"
                 width={40}
                 height={40}
               />
@@ -205,6 +208,7 @@ const Earn = () => {
                     alt="Telegram"
                     className="earn-task-icon-telegram"
                     width={40}
+                    loading="lazy"
                     height={40}
                   />
                 </div>
@@ -215,6 +219,7 @@ const Earn = () => {
                     <Image
                       src={Coin}
                       alt="Coins"
+                      loading="lazy"
                       className="earn-reward-icon"
                       width={30}
                       height={30}
@@ -241,6 +246,7 @@ const Earn = () => {
                     src={X}
                     alt="X"
                     className="earn-task-icon-x"
+                    loading="lazy"
                     width={40}
                     height={40}
                   />
@@ -255,6 +261,7 @@ const Earn = () => {
                       className="earn-reward-icon"
                       width={30}
                       height={30}
+                      loading="lazy"
                     />
                     <span className="earn-span-value ">{rewards.twitter}</span>
                   </div>

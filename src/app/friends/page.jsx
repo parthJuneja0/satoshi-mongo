@@ -69,7 +69,7 @@ const Friends = () => {
               <div className="ml-2 text-sm flex-1">
                 <p className="text-base font-bold">Invite a Friend</p>
                 <div className="friends-coin-text text-yellow-400 flex items-center text-lg mt-2">
-                  + <Image src={Coin} alt="coin" width={20} height={20} />{" "}
+                  + <Image src={Coin} alt="coin" width={20} height={20} loading="lazy"/>{" "}
                   10,000 for you and your friend
                 </div>
               </div>
@@ -81,7 +81,7 @@ const Friends = () => {
                   Invite a Friend with Telegram Premium
                 </p>
                 <div className="friends-coin-text text-yellow-400 flex items-center text-lg mt-2">
-                  + <Image src={Coin} alt="coin" width={20} height={20} />{" "}
+                  + <Image src={Coin} alt="coin" width={20} height={20} loading="lazy"/>{" "}
                   25,000 for you and your friend
                 </div>
               </div>

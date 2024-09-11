@@ -139,6 +139,7 @@ const Shop = () => {
             alt="Animal Food"
             width={20}
             height={20}
+            loading="lazy"
             className="balance-image object-cover mr-1"
           />
           {userInfo && <span>{userInfo.utils.food}</span>}
@@ -149,6 +150,7 @@ const Shop = () => {
             alt="Tree Fertilizer"
             width={20}
             height={20}
+            loading="lazy"
             className="balance-image object-cover mr-1"
           />
           {userInfo && <span>{userInfo.utils.fertilizer}</span>}
@@ -159,6 +161,7 @@ const Shop = () => {
             alt="Machine Oil"
             width={20}
             height={20}
+            loading="lazy"
             className="balance-image object-cover mr-1"
           />
           {userInfo && <span>{userInfo.utils.oil}</span>}
@@ -169,6 +172,7 @@ const Shop = () => {
             alt="Coin"
             height={40}
             width={40}
+            loading="lazy"
             className="balance-icon"
           />
           {userInfo && (
