@@ -37,7 +37,7 @@ export const UserDataProvider = ({ children }) => {
                 });
             } else {
                 setUserWebData({
-                    userId: 2,
+                    userId: 1,
                     username: "Guest Account",
                     userPic: null,
                     premium: false,
@@ -101,9 +101,9 @@ export const UserDataProvider = ({ children }) => {
         setFriends({});
     }
 
-    // if (!isMobile) {
-    //     return <QRCodeComponent />;
-    // }
+    if (!isMobile) {
+        return <QRCodeComponent />;
+    }
 
     return (
         <userDataContext.Provider value={{ userWebData, isReferred, setIsReferred, referredBy, setReferredBy, userInfo, setUserInfo, unlockedCards, setUnlockedCards, userRewards, setUserRewards, friends, setFriends, createAccount, resetAccount }}>
