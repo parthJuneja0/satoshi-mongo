@@ -47,7 +47,7 @@ const Friends = () => {
     const response = await claimReferalReward(
       userWebData.userId,
       userId,
-      userWebData.premium ? 25000 : 10000
+      userWebData.premium ? 250000 : 100000
     );
     setFriends(response.friends);
     setUserInfo(response.user);
@@ -70,7 +70,7 @@ const Friends = () => {
                 <p className="text-base font-bold">Invite a Friend</p>
                 <div className="friends-coin-text text-yellow-400 flex items-center text-lg mt-2">
                   + <Image src={Coin} alt="coin" width={20} height={20} loading="lazy"/>{" "}
-                  10,000 for you and your friend
+                  1Lakh for you and your friend
                 </div>
               </div>
             </div>
@@ -82,7 +82,7 @@ const Friends = () => {
                 </p>
                 <div className="friends-coin-text text-yellow-400 flex items-center text-lg mt-2">
                   + <Image src={Coin} alt="coin" width={20} height={20} loading="lazy"/>{" "}
-                  25,000 for you and your friend
+                  2.5Lakh for you and your friend
                 </div>
               </div>
             </div>
@@ -132,7 +132,7 @@ const Friends = () => {
                           handleClaim(friend.userId);
                         }}
                       >
-                        {userWebData.premium ? 25000 : 10000}
+                        {userWebData.premium ? 250000 : 100000}
                       </button>
                     ) : (
                       <button className="friends-claimed-button">
