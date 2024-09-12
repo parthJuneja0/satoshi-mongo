@@ -370,7 +370,7 @@ const Mine = () => {
     } else {
       setBalaceSufficient(false);
     }
-  }, [showBuyModal]);
+  }, [showBuyModal, getCardById]);
 
   const calculateProfit = (baseValue, currentValue, level) => {
     const a = ((baseValue + 5 * level) / currentValue) * 100;
@@ -433,7 +433,7 @@ const Mine = () => {
 
       unlockCards(userInfo.telegramId, cardsToUnlock);
     }
-  }, [unlockedCards]);
+  }, [unlockedCards, getCardById, unlockCards]);
 
   const unlockCards = async (user, newCards) => {
     const cards = await unlockNewCards(user, newCards);
@@ -469,6 +469,7 @@ const Mine = () => {
     return (
       userInfo &&
       unlockedCards &&
+      cards &&
       cards.map((card, index) => {
         const isUnlocked = isCardUnlocked(card);
         return (
@@ -540,7 +541,7 @@ const Mine = () => {
                 Lvl &nbsp;
                 {unlockedCards && getCardById(card.cardId)
                   ? getCardById(card.cardId).level
-                  : card.level}
+                  : 0}
               </p>
               <div className="vertical-separator"></div>
               {activeTab === "Animals" && (
