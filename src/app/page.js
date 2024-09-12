@@ -31,7 +31,7 @@ export default function Home() {
   const [coinProfit, setCoinProfit] = useState();
 
   useEffect(() => {
-    if (!userInfo || userInfo.lastSession.hasClaimed) return;
+    if (!userInfo || userInfo.lastSession.hasClaimed || toggleHasClaimed) return;
     const differenceInMilliseconds = Date.now() - userInfo.lastSession.lastOnline;
     const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
 
@@ -66,7 +66,7 @@ export default function Home() {
       const response = await addCurrentEnergy(userWebData.userId, energyProfit);
       setUserInfo(response);
     })();
-  }, [energyProfit]);
+  }, [energyProfit, addCurrentEnergy]);
 
   const energySyncThreshold = 30; // Sync every 50 energy increments
   const [energyToSync, setEnergyToSync] = useState(0); // Track unsynced energy
@@ -276,20 +276,20 @@ export default function Home() {
                   <div className="px-4 z-10">
                     <div className="flex items-center justify-between pt-4">
                       <div className="flex items-center space-x-2">
-                      <div>
-                        <Image 
-                          alt=""
-                          src={profile}
-                          width={24}
-                          height={24}
-                          className="w-full"
-                          loading="lazy"
-                          onClick={() => {
-                            toggleLeaderboard();
-                          }}
-                        />
-                      </div>
-                      {/* </div> */}
+                        <div>
+                          <Image
+                            alt=""
+                            src={profile}
+                            width={24}
+                            height={24}
+                            className="w-full"
+                            loading="lazy"
+                            onClick={() => {
+                              toggleLeaderboard();
+                            }}
+                          />
+                        </div>
+                        {/* </div> */}
                         {userWebData && userWebData.userPic && (
                           <Image
                             alt=""

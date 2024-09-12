@@ -361,7 +361,7 @@ const Mine = () => {
   };
 
   useEffect(() => {
-    if (!showBuyModal) return;
+    if (!userInfo || !unlockCards || !showBuyModal || !selectedCard) return;
     if (
       userInfo.utils[selectedCard.reqUtil] >=
       getCardById(selectedCard.cardId).price
@@ -408,11 +408,11 @@ const Mine = () => {
     setShowBuyModal(false);
     setUserInfo(response.user);
     setUnlockedCards(response.cards);
-    setIsLoading(false);  
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    if (!unlockedCards || !selectedCard) return;
+    if (!userInfo || !unlockedCards || !selectedCard) return;
     // Get cards that need to be unlocked
     const dependenciesToUnlock = conditions
       .filter(
