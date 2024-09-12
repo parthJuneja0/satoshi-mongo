@@ -20,7 +20,7 @@ const ClaimReferalRewardModal = () => {
         {referredBy ? (
           <div className="confirm-modal-body">
             <p>
-              Congratulations! You have recieved 10000 coins by referal of your
+              Congratulations! You have recieved 5000 coins by referal of your
               friend {referredBy.username}
             </p>
             <p>Click on confirm to create your account</p>
