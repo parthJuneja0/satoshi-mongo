@@ -8,7 +8,7 @@ export async function PUT(req) {
 
     const { telegramId, task, reward } = await req.json();
 
-    if (!['youtube', 'telegram', 'twitter', 'satoshiTV'].includes(task)) {
+    if (!['latestpodcast', 'satoshiTV', 'airdrop', 'news', 'podcast', 'telegram', 'twitter'].includes(task)) {
         return NextResponse.json({ message: 'Invalid task name' }, { status: 400 });
     }
 

@@ -15,13 +15,13 @@ import { transactionsContext } from "@/context/transactionsContext";
 
 const Earn = () => {
   const rewards = {
-    SatoshiTV: 50000,
+    latestpodcast: 5000,
+    satoshiTV: 5000,
+    airdrop: 20000,
+    news: 50000,
+    podcast: 50000,
     telegram: 20000,
     twitter: 20000,
-    satoshiTV: 5000,
-    podcast: 50000,
-    news: 5000,
-    latestpodcast: 5000,
   };
 
   const [showDailyRewards, setShowDailyRewards] = useState(false);
@@ -59,46 +59,46 @@ const Earn = () => {
           <h2 className="earn-section-title">Youtube Videos</h2>
           {/* Recent Tasks which are updated and new */}
           <a
-              href="https://youtube.com/@satoshitvnews?si=3e40LeAs-ri8Zf-Y"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="earn-task-item"
-              onClick={() => handleLinkClick("youtube")}
-            >
-              <div className="earn-task-content">
-                <div className="earn-task-icon earn-glow-effect-white">
+            href="https://youtube.com/@satoshipodcast?si=2KW461p8RwJ0txt7"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="earn-task-item"
+            onClick={() => handleLinkClick("latestpodcast")}
+          >
+            <div className="earn-task-content">
+              <div className="earn-task-icon earn-glow-effect-white">
+                <Image
+                  src={Youtube}
+                  alt="YouTube"
+                  className="earn-task-icon-youtube"
+                  width={40}
+                  height={40}
+                />
+              </div>
+              <div className="earn-task-details">
+                <p className="earn-task-title">Watch the latest podcast</p>
+                <div className="earn-task-reward">
+                  <p className="earn-plus">+</p>
                   <Image
-                    src={Youtube}
-                    alt="YouTube"
-                    className="earn-task-icon-youtube"
-                    width={40}
-                    height={40}
+                    src={Coin}
+                    alt="Coins"
+                    className="earn-reward-icon"
+                    width={30}
+                    height={30}
                   />
-                </div>
-                <div className="earn-task-details">
-                  <p className="earn-task-title">
-                    Watch the latest podcast 
-                  </p>
-                  <div className="earn-task-reward">
-                    <p className="earn-plus">+</p>
-                    <Image
-                      src={Coin}
-                      alt="Coins"
-                      className="earn-reward-icon"
-                      width={30}
-                      height={30}
-                    />
-                    <span className="earn-span-value ">{rewards.latestpodcast}</span>
-                  </div>
+                  <span className="earn-span-value ">
+                    {rewards.latestpodcast}
+                  </span>
                 </div>
               </div>
-              {userRewards && userRewards.completedTasks.youtube && (
-                <FaCheckCircle className="earn-task-checkmark" />
-              )}
-            </a>
+            </div>
+            {userRewards && userRewards.completedTasks.latestpodcast && (
+              <FaCheckCircle className="earn-task-checkmark" />
+            )}
+          </a>
           {/* Latest news */}
           <a
-            href="https://youtube.com/@satoshitvnews?si=3e40LeAs-ri8Zf-Y"
+            href="https://youtu.be/Dj1mthvJ-5Y?si=Uno0u9MgmcfpiUsY"
             target="_blank"
             rel="noopener noreferrer"
             className="earn-task-item"
@@ -125,7 +125,7 @@ const Earn = () => {
                     width={30}
                     height={30}
                   />
-                  <span className="earn-span-value">{rewards.news}</span>
+                  <span className="earn-span-value">{rewards.satoshiTV}</span>
                 </div>
               </div>
             </div>
@@ -142,7 +142,7 @@ const Earn = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="earn-task-item"
-            onClick={() => handleLinkClick("telegram")}
+            onClick={() => handleLinkClick("airdrop")}
           >
             <div className="earn-task-content">
               <div className="earn-task-icon earn-glow-effect-white">
@@ -167,11 +167,11 @@ const Earn = () => {
                     loading="lazy"
                     height={30}
                   />
-                  <span className="earn-span-value ">{rewards.telegram}</span>
+                  <span className="earn-span-value ">{rewards.airdrop}</span>
                 </div>
               </div>
             </div>
-            {userRewards && userRewards.completedTasks.telegram && (
+            {userRewards && userRewards.completedTasks.airdrop && (
               <FaCheckCircle className="earn-task-checkmark" />
             )}
           </a>
@@ -199,12 +199,12 @@ const Earn = () => {
         <div className="earn-section">
           <h2 className="earn-section-title">Tasks List</h2>
           <div className="earn-task-list">
-          <a
+            <a
               href="https://youtube.com/@satoshitvnews?si=3e40LeAs-ri8Zf-Y"
               target="_blank"
               rel="noopener noreferrer"
               className="earn-task-item"
-              onClick={() => handleLinkClick("youtube")}
+              onClick={() => handleLinkClick("news")}
             >
               <div className="earn-task-content">
                 <div className="earn-task-icon earn-glow-effect-white">
@@ -217,9 +217,7 @@ const Earn = () => {
                   />
                 </div>
                 <div className="earn-task-details">
-                  <p className="earn-task-title">
-                    Subscribe to SatoshiTV News
-                  </p>
+                  <p className="earn-task-title">Subscribe to SatoshiTV News</p>
                   <div className="earn-task-reward">
                     <p className="earn-plus">+</p>
                     <Image
@@ -229,20 +227,20 @@ const Earn = () => {
                       width={30}
                       height={30}
                     />
-                    <span className="earn-span-value ">{rewards.SatoshiTV}</span>
+                    <span className="earn-span-value ">{rewards.news}</span>
                   </div>
                 </div>
               </div>
-              {userRewards && userRewards.completedTasks.youtube && (
+              {userRewards && userRewards.completedTasks.news && (
                 <FaCheckCircle className="earn-task-checkmark" />
               )}
             </a>
             <a
-              href="https://youtube.com/@satoshitvnews?si=3e40LeAs-ri8Zf-Y"
+              href="https://youtube.com/@satoshipodcast?si=2KW461p8RwJ0txt7"
               target="_blank"
               rel="noopener noreferrer"
               className="earn-task-item"
-              onClick={() => handleLinkClick("youtube")}
+              onClick={() => handleLinkClick("podcast")}
             >
               <div className="earn-task-content">
                 <div className="earn-task-icon earn-glow-effect-white">
@@ -271,7 +269,7 @@ const Earn = () => {
                   </div>
                 </div>
               </div>
-              {userRewards && userRewards.completedTasks.youtube && (
+              {userRewards && userRewards.completedTasks.podcast && (
                 <FaCheckCircle className="earn-task-checkmark" />
               )}
             </a>

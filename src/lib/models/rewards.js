@@ -22,10 +22,13 @@ const RewardsSchema = new mongoose.Schema({
     required: true,
   },
   completedTasks: {
-    youtube: { type: Boolean, default: false },
+    latestpodcast: { type: Boolean, default: false },
+    satoshiTV: { type: Boolean, default: false },
+    airdrop: { type: Boolean, default: false },
+    news: { type: Boolean, default: false },
+    podcast: { type: Boolean, default: false },
     telegram: { type: Boolean, default: false },
     twitter: { type: Boolean, default: false },
-    satoshiTV: { type: Boolean, default: false },
   },
   dailyRewards: DailyRewardsSchema,
 });
