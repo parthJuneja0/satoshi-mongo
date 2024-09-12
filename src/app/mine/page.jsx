@@ -339,11 +339,6 @@ const Mine = () => {
   const { cardUpgrade, unlockNewCards } = useContext(transactionsContext);
   const [isLoading, setIsLoading] = useState(false);
 
-  // useEffect(() => {
-  //   if (!unlockedCards) return;
-  //   console.log(unlockedCards);
-  // }, [unlockedCards]);
-
   const [activeTab, setActiveTab] = useState("Animals");
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [showUnlockModal, setShowUnlockModal] = useState(false);
@@ -357,6 +352,7 @@ const Mine = () => {
   };
 
   const handleCardClick = (card, isUnlocked) => {
+    if (selectedCard) return;
     setSelectedCard(card);
     if (isUnlocked) {
       setShowBuyModal(true);
@@ -437,6 +433,8 @@ const Mine = () => {
         .map(({ reqUtil, title, ...rest }) => rest);
 
       unlockCards(userInfo.telegramId, cardsToUnlock);
+    } else {
+      setSelectedCard(null);
     }
   }, [unlockedCards]);
 
@@ -449,6 +447,7 @@ const Mine = () => {
   const handleCancel = () => {
     setShowBuyModal(false);
     setShowUnlockModal(false);
+    setSelectedCard(null);
   };
 
   const renderCards = () => {
@@ -475,7 +474,6 @@ const Mine = () => {
       userInfo &&
       unlockedCards &&
       cards.map((card, index) => {
-        console.log(unlockedCards);
         const isUnlocked = isCardUnlocked(card);
         return (
           <div
