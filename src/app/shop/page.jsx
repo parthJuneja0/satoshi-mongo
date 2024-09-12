@@ -104,11 +104,6 @@ const Shop = () => {
     });
   };
 
-  useEffect(() => {
-    if (!costs) return;
-    console.log(costs);
-  }, [costs]);
-
   const purchaseItem = async (key) => {
     const cost = products[key].price * quantities[key];
     if (Math.floor(userInfo.coins) >= cost) {
@@ -119,7 +114,7 @@ const Shop = () => {
         quantities[key],
         key
       );
-      setLoading({ ...loading, [key]: false }); 
+      setLoading({ ...loading, [key]: false });
       setUserInfo(userData);
       setQuantities({ ...quantities, [key]: 1 });
       updateCosts(key, 1);
@@ -237,25 +232,25 @@ const Shop = () => {
                     </button>
                   ) : (
                     <button
-                    className={`button-price`}
-                    onClick={() => purchaseItem(item.key)}
-                    disabled={loading[item.key]}  // Disable button while loading
-                  >
-                    {loading[item.key] ? (
-                      <div className="button-spinner"></div>  // Show loader
-                    ) : (
-                      <>
-                        <Image
-                          src={Coin}
-                          alt="Coin"
-                          height={24}
-                          width={24}
-                          className="mr-1 "
-                        />{" "}
-                        {costs && costs[item.key]}
-                      </>
-                    )}
-                  </button>
+                      className={`button-price`}
+                      onClick={() => purchaseItem(item.key)}
+                      disabled={loading[item.key]} // Disable button while loading
+                    >
+                      {loading[item.key] ? (
+                        <div className="button-spinner"></div> // Show loader
+                      ) : (
+                        <>
+                          <Image
+                            src={Coin}
+                            alt="Coin"
+                            height={24}
+                            width={24}
+                            className="mr-1 "
+                          />{" "}
+                          {costs && costs[item.key]}
+                        </>
+                      )}
+                    </button>
                   )}
                 </div>
               </div>
