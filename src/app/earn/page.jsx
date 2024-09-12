@@ -15,11 +15,11 @@ import { transactionsContext } from "@/context/transactionsContext";
 
 const Earn = () => {
   const rewards = {
-    latestpodcast: 5000,
-    satoshiTV: 5000,
+    latestpodcast: 100000,
+    satoshiTV: 100000,
     airdrop: 20000,
-    news: 50000,
-    podcast: 50000,
+    news: 500000,
+    podcast: 500000,
     telegram: 20000,
     twitter: 20000,
   };

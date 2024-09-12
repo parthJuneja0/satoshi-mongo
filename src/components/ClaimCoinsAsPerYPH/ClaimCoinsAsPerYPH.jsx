@@ -26,7 +26,7 @@ const ClaimCoinsAsPerYPH = ({ coinProfit, setIsClaimAvailable }) => {
       <div className="confirm-modal-overlay"></div>
       <div className="confirm-modal">
         <div className="confirm-modal-header">
-          <span className="title">Thank You Binance</span>
+          <span className="title">Thankyou Satoshi</span>
         </div>
         <div className="confirm-modal-body">
           <p>
