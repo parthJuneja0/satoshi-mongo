@@ -31,12 +31,12 @@ export default function Home() {
   const [coinProfit, setCoinProfit] = useState();
 
   useEffect(() => {
-    if (!userInfo || userInfo.lastSession.hasClaimed || toggleHasClaimed) return;
+    if (!userInfo || userInfo.lastSession.hasClaimed) return;
     const differenceInMilliseconds = Date.now() - userInfo.lastSession.lastOnline;
     const differenceInSeconds = Math.floor(differenceInMilliseconds / 1000);
 
     // For debugging purposes
-    // const differenceInSeconds = 50000;
+    // const differenceInSeconds = 50000; 
 
     setEnergyProfit(differenceInSeconds);
 
