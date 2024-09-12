@@ -68,14 +68,14 @@
 }
 
 .mine-card.animals {
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.8),
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.8),
     /* bright yellow glow */
     inset 0 0 10px rgba(0, 0, 0, 0.5);
   /* Inner shadow */
 }
 
 .mine-card.trees {
-  box-shadow: 0 0 20px rgba(34, 197, 61, 0.8),
+  box-shadow: 0 0 10px rgba(34, 197, 61, 0.8),
     /* green-500 glow */
     inset 0 0 10px rgba(0, 0, 0, 0.5);
   /* Inner shadow */
@@ -86,7 +86,7 @@
 }
 
 .mine-card.tools {
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
     /* white glow */
     inset 0 0 10px rgba(0, 0, 0, 0.5);
   /* Inner shadow */
