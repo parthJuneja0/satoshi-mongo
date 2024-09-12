@@ -100,7 +100,7 @@ export async function POST(req) {
             console.log(`Friends created`)
         }
 
-        return NextResponse.json({ user, unlockedCards, rewards, friends }, { status: 201 });
+        return NextResponse.json({ user, unlockedCards: unlockedCards.cards, rewards, friends }, { status: 201 });
 
     } catch (error) {
         console.log(error);

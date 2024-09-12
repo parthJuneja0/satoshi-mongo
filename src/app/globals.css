@@ -18,12 +18,9 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
@@ -33,6 +30,38 @@ body {
 }
 
 @keyframes hamsterPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translate(-50%, -50%) translateY(0px);
+  }
+
+  10% {
+    opacity: 0.5;
+    transform: scale(1.2) translate(-50%, -50%) translateY(-10px);
+  }
+
+  25% {
+    opacity: 0.5;
+    transform: scale(1.2) translate(-50%, -50%) translateY(-50px);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.4) translate(-50%, -50%) translateY(-100px);
+  }
+
+  75% {
+    opacity: 0.5;
+    transform: scale(1.1) translate(-50%, -50%) translateY(-150px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.8) translate(-50%, -50%) translateY(-180px);
+  }
+}
+
+/* @keyframes hamsterPop {
   0% {
     opacity: 0;
     transform: scale(0.5) translate(-50%, -50%) translateY(0px);
@@ -49,4 +78,4 @@ body {
     opacity: 0;
     transform: scale(0.8) translate(-50%, -50%) translateY(-50px);
   }
-}
+} */
