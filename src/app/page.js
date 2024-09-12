@@ -169,7 +169,7 @@ export default function Home() {
   const handleCardClick = (e) => {
     if (e.target.tagName !== "IMG" || !userInfo || userInfo.currentEnergy <= 0) return;
 
-    clickCountRef.current += 1;
+    clickCountRef.current += userInfo.pointsToAdd;
 
     const rect = e.target.getBoundingClientRect();
     const x = e.changedTouches[0].clientX - rect.left - rect.width / 2;
@@ -191,8 +191,8 @@ export default function Home() {
 
     setUserInfo((prevUserInfo) => ({
       ...prevUserInfo,
-      coins: prevUserInfo.coins + 1,
-      currentEnergy: Math.max(prevUserInfo.currentEnergy - 1, 0),
+      coins: prevUserInfo.coins + userInfo.pointsToAdd,
+      currentEnergy: Math.max(prevUserInfo.currentEnergy - userInfo.pointsToAdd, 0),
     }));
 
     // Debounced API call
@@ -458,9 +458,9 @@ export default function Home() {
               )}
             </div>
           </div>
+          <Footer />
         </div>
       )}
-      {userInfo && <Footer />}
     </div>
   );
 }

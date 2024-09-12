@@ -339,10 +339,15 @@ const Mine = () => {
   const { cardUpgrade, unlockNewCards } = useContext(transactionsContext);
   const [isLoading, setIsLoading] = useState(false);
 
+  // useEffect(() => {
+  //   if (!unlockedCards) return;
+  //   console.log(unlockedCards);
+  // }, [unlockedCards]);
+
   const [activeTab, setActiveTab] = useState("Animals");
   const [showBuyModal, setShowBuyModal] = useState(false);
   const [showUnlockModal, setShowUnlockModal] = useState(false);
-  const [selectedCard, setSelectedCard] = useState(null);
+  const [selectedCard, setSelectedCard] = useState();
   const [balaceSufficient, setBalaceSufficient] = useState(false);
 
   const getCardById = (cardId) => {
@@ -361,7 +366,7 @@ const Mine = () => {
   };
 
   useEffect(() => {
-    if (!userInfo || !unlockCards || !showBuyModal || !selectedCard) return;
+    if (!userInfo || !unlockedCards || !showBuyModal || !selectedCard) return;
     if (
       userInfo.utils[selectedCard.reqUtil] >=
       getCardById(selectedCard.cardId).price
@@ -470,6 +475,7 @@ const Mine = () => {
       userInfo &&
       unlockedCards &&
       cards.map((card, index) => {
+        console.log(unlockedCards);
         const isUnlocked = isCardUnlocked(card);
         return (
           <div
@@ -586,48 +592,51 @@ const Mine = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-gray-900 to-black flex justify-center items-center w-[450px]">
-      <div className="w-full text-white font-bold flex flex-col relative">
-        <div className="tabs">
-          <button
-            onClick={() => setActiveTab("Animals")}
-            className={activeTab === "Animals" ? "active" : ""}
-          >
-            Animals
-          </button>
-          <button
-            onClick={() => setActiveTab("Trees")}
-            className={activeTab === "Trees" ? "active" : ""}
-          >
-            Trees
-          </button>
-          <button
-            onClick={() => setActiveTab("Tools")}
-            className={activeTab === "Tools" ? "active" : ""}
-          >
-            Tools
-          </button>
+    userInfo &&
+    unlockedCards && (
+      <div className="bg-gradient-to-b from-gray-900 to-black flex justify-center items-center w-[450px]">
+        <div className="w-full text-white font-bold flex flex-col relative">
+          <div className="tabs">
+            <button
+              onClick={() => setActiveTab("Animals")}
+              className={activeTab === "Animals" ? "active" : ""}
+            >
+              Animals
+            </button>
+            <button
+              onClick={() => setActiveTab("Trees")}
+              className={activeTab === "Trees" ? "active" : ""}
+            >
+              Trees
+            </button>
+            <button
+              onClick={() => setActiveTab("Tools")}
+              className={activeTab === "Tools" ? "active" : ""}
+            >
+              Tools
+            </button>
+          </div>
+          <div className="mine-content p-6">
+            <div className="mine-card-grid">{renderCards()}</div>
+          </div>
+          <BuyConfirmationModal
+            show={showBuyModal}
+            onClose={handleCancel}
+            onConfirm={handleConfirmBuy}
+            card={selectedCard}
+            getCardById={getCardById}
+            balaceSufficient={balaceSufficient}
+            isLoading={isLoading}
+          />
+          <UnlockConditionModal
+            show={showUnlockModal}
+            onClose={handleCancel}
+            card={selectedCard}
+          />
         </div>
-        <div className="mine-content p-6">
-          <div className="mine-card-grid">{renderCards()}</div>
-        </div>
-        <BuyConfirmationModal
-          show={showBuyModal}
-          onClose={handleCancel}
-          onConfirm={handleConfirmBuy}
-          card={selectedCard}
-          getCardById={getCardById}
-          balaceSufficient={balaceSufficient}
-          isLoading={isLoading}
-        />
-        <UnlockConditionModal
-          show={showUnlockModal}
-          onClose={handleCancel}
-          card={selectedCard}
-        />
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    )
   );
 };
 
