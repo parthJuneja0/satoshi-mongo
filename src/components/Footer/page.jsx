@@ -96,7 +96,7 @@ const Footer = () => {
   ];
 
   return (
-      <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-gray-900 flex justify-between items-center z-50 text-xs p-1 md:w-auto md:mx-auto ">
+      <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-gray-900 flex justify-between items-center z-50 text-xs p-1 md:w-auto md:mx-auto " style={{ boxShadow: '0 4px 6px rgba(255, 255, 255, 0.5)' }}>
 
       {/* Reduced padding (change p-1 to adjust padding) */}
       {array.map((item, index) => (
