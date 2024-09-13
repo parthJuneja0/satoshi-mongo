@@ -70,7 +70,7 @@ const Friends = () => {
                 <p className="text-base font-bold">Invite a Friend</p>
                 <div className="friends-coin-text text-yellow-400 flex items-center text-lg mt-2">
                   + <Image src={Coin} alt="coin" width={20} height={20} loading="lazy"/>{" "}
-                  1Lakh for you and your friend
+                  1Lakh Coins for you 
                 </div>
               </div>
             </div>
@@ -82,7 +82,7 @@ const Friends = () => {
                 </p>
                 <div className="friends-coin-text text-yellow-400 flex items-center text-lg mt-2">
                   + <Image src={Coin} alt="coin" width={20} height={20} loading="lazy"/>{" "}
-                  2.5Lakh for you and your friend
+                  2.5Lakh Coins for you 
                 </div>
               </div>
             </div>
