@@ -4,7 +4,7 @@ import { Rewards } from '@/lib/models/rewards';
 import { NextResponse } from 'next/server';
 
 // PUT request handler
-export async function PUT(req) {
+export async function PUT() {
     try {
         await connectToDatabase();
 

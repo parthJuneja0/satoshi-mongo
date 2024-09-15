@@ -5,7 +5,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import "./Earn.css";
 import DailyRewardsModal from "@/components/RewardModal/DailyRewardsModal";
 import Youtube from "@/assets/social/youtube.png";
-import X from "@/assets/social/X.png";
+import X from "@/assets/social/x.png";
 import Telegram from "@/assets/social/telegram.png";
 import Coin from "@/assets/coin.png";
 import Reward from "@/assets/social/reward.png";
