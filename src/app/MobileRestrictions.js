@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 
 export default function MobileRestrictions({ children }) {
+  // Comment the useEffect to inspect from the browser
   useEffect(() => {
     // Disable right-click on mobile devices
     const handleContextMenu = (e) => e.preventDefault();

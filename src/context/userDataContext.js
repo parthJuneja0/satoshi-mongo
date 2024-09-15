@@ -54,6 +54,7 @@ export const UserDataProvider = ({ children }) => {
             coins: referredBy ? 5000 : 0,
             referredBy
         });
+        // 
         setUserInfo(response.data.user);
         setUnlockedCards(response.data.unlockedCards);
         setUserRewards(response.data.rewards);

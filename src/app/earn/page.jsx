@@ -57,7 +57,8 @@ const Earn = () => {
 
         <div className="earn-section">
           <h2 className="earn-section-title">Youtube Videos</h2>
-          {/* Recent Tasks which are updated and new */}
+
+          {/* Latest Podcast section */}
           <a
             href="https://youtube.com/@satoshipodcast?si=2KW461p8RwJ0txt7"
             target="_blank"
@@ -96,7 +97,9 @@ const Earn = () => {
               <FaCheckCircle className="earn-task-checkmark" />
             )}
           </a>
-          {/* Latest news */}
+          {/* Latest Podcast section */}
+
+          {/* Satoshi TV section */}
           <a
             href="https://youtu.be/Dj1mthvJ-5Y?si=Uno0u9MgmcfpiUsY"
             target="_blank"
@@ -133,6 +136,7 @@ const Earn = () => {
               <FaCheckCircle className="earn-task-checkmark" />
             )}
           </a>
+          {/* Satoshi TV section */}
         </div>
 
         <div className="earn-section">
