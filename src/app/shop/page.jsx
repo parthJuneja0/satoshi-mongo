@@ -139,8 +139,8 @@ const Shop = () => {
           <Image
             src={food}
             alt="Animal Food"
-            width={20}
-            height={20}
+            width={25}
+            height={25}
             loading="lazy"
             className="balance-image object-cover mr-1"
           />
@@ -150,8 +150,8 @@ const Shop = () => {
           <Image
             src={fertilizer}
             alt="Tree Fertilizer"
-            width={20}
-            height={20}
+            width={25}
+            height={25}
             loading="lazy"
             className="balance-image object-cover mr-1"
           />
@@ -161,8 +161,8 @@ const Shop = () => {
           <Image
             src={oil}
             alt="Machine Oil"
-            width={20}
-            height={20}
+            width={25}
+            height={25}
             loading="lazy"
             className="balance-image object-cover mr-1"
           />
