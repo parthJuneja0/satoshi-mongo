@@ -5,7 +5,7 @@
   background-color: #1f1f1f;
   color: white;
   padding: 1rem;
-  
+  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -234,6 +234,7 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
+    width: 100vw;
   }
 
   .shop-heading {
@@ -282,7 +283,7 @@
     border-radius: 0.5rem;
     display: flex;
     align-items: center;
-    width: 100%;
+    width: 80%;
     max-width: 400px;
     margin-bottom: 0.5rem;
   }
