@@ -106,9 +106,9 @@ export const UserDataProvider = ({ children }) => {
     setFriends({});
   };
 
-  // if (!isMobile) {
-  //   return <QRCodeComponent />;
-  // }
+  if (!isMobile) {
+    return <QRCodeComponent />;
+  }
 
   return (
     <userDataContext.Provider
