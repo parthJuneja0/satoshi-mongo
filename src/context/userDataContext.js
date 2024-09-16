@@ -64,9 +64,54 @@ export const UserDataProvider = ({ children }) => {
     setIsReferred(false);
   };
 
+<<<<<<< Updated upstream
   const findReferredBy = async (referalId) => {
     const response = await axios.get(
       `/api/transactions/findReferalUser?id=${referalId}`
+=======
+    const getUserData = async (referalId) => {
+        const response = await axios.get(`/api?id=${userWebData.userId}`);
+        if (!response.data.user) {
+            if (!referalId) createAccount(null);
+            else {
+                await findReferredBy(referalId);
+                setIsReferred(true);
+            }
+        } else {
+            // Toggle hasClaimed
+            const userData = await axios.put("/api/sync/toggleHasClaimed", {
+                telegramId: userWebData.userId,
+            });
+            setUserInfo(userData.data.user);
+            setUnlockedCards(response.data.unlockedCards);
+            setUserRewards(response.data.rewards);
+            setFriends(response.data.friends);
+        }
+    }
+
+    useEffect(() => {
+        if (!userWebData) return;
+        if (userWebData.referalId) getUserData(userWebData.referalId);
+        else getUserData(null);
+    }, [userWebData]);
+
+    const resetAccount = async () => {
+        await axios.delete(`/api?id=${userWebData.userId}`);
+        setUserInfo(null);
+        setUnlockedCards([]);
+        setUserRewards({});
+        setFriends({});
+    }
+
+    // if (!isMobile) {
+    //     return <QRCodeComponent />;
+    // }
+
+    return (
+        <userDataContext.Provider value={{ userWebData, isReferred, setIsReferred, referredBy, setReferredBy, userInfo, setUserInfo, unlockedCards, setUnlockedCards, userRewards, setUserRewards, friends, setFriends, createAccount, resetAccount }}>
+            {children}
+        </userDataContext.Provider>
+>>>>>>> Stashed changes
     );
     if (response.data.referredBy) setReferredBy(response.data.referredBy);
     else setReferredBy(null);
