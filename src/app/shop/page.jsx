@@ -35,12 +35,7 @@ const products = {
 const Shop = () => {
   const { userInfo, setUserInfo } = useContext(userDataContext);
   const { shopPurchase } = useContext(transactionsContext);
-  const [loading, setLoading] = useState({
-    food: false,
-    fertilizer: false,
-    oil: false,
-  });
-
+  const [loading, setLoading] = useState({}); // Initialize as an empty object
   const [quantities, setQuantities] = useState({
     food: 1,
     fertilizer: 1,
@@ -51,17 +46,16 @@ const Shop = () => {
     fertilizer: 1000,
     oil: 1000,
   });
-  const [disablePurchase, setDisablePurchase] = useState();
+  const [disablePurchase, setDisablePurchase] = useState({});
 
   useEffect(() => {
     if (!userInfo) return;
 
-    setDisablePurchase((prevDisablePurchase) => ({
-      ...prevDisablePurchase,
+    setDisablePurchase({
       food: Math.floor(userInfo.coins) < costs.food,
       fertilizer: Math.floor(userInfo.coins) < costs.fertilizer,
       oil: Math.floor(userInfo.coins) < costs.oil,
-    }));
+    });
   }, [userInfo, costs]);
 
   const items = [
@@ -86,49 +80,58 @@ const Shop = () => {
   ];
 
   const increaseQuantity = (key) => {
-    setQuantities({ ...quantities, [key]: quantities[key] + 1 });
-    updateCosts(key, quantities[key] + 1);
+    setQuantities((prevQuantities) => {
+      const newQuantity = prevQuantities[key] + 1;
+      updateCosts(key, newQuantity);
+      return { ...prevQuantities, [key]: newQuantity };
+    });
   };
 
   const decreaseQuantity = (key) => {
-    if (quantities[key] > 1) {
-      setQuantities({ ...quantities, [key]: quantities[key] - 1 });
-      updateCosts(key, quantities[key] - 1);
-    }
+    setQuantities((prevQuantities) => {
+      if (prevQuantities[key] > 1) {
+        const newQuantity = prevQuantities[key] - 1;
+        updateCosts(key, newQuantity);
+        return { ...prevQuantities, [key]: newQuantity };
+      }
+      return prevQuantities;
+    });
   };
 
   const updateCosts = (key, newQuantity) => {
-    setCosts({
-      ...costs,
+    setCosts((prevCosts) => ({
+      ...prevCosts,
       [key]: products[key].price * newQuantity,
-    });
+    }));
   };
 
   const purchaseItem = async (key) => {
     const cost = products[key].price * quantities[key];
     if (Math.floor(userInfo.coins) >= cost) {
-      setLoading({ ...loading, [key]: true });
-      const userData = await shopPurchase(
-        userInfo.telegramId,
-        cost,
-        quantities[key],
-        key
-      );
-      setLoading({ ...loading, [key]: false });
-      setUserInfo(userData);
-      setQuantities({ ...quantities, [key]: 1 });
-      updateCosts(key, 1);
+      setLoading((prevLoading) => ({ ...prevLoading, [key]: true }));
+      try {
+        const userData = await shopPurchase(
+          userInfo.telegramId,
+          cost,
+          quantities[key],
+          key
+        );
+        setUserInfo(userData);
+        setQuantities((prevQuantities) => ({ ...prevQuantities, [key]: 1 }));
+        updateCosts(key, 1);
+      } catch (error) {
+        console.error("Error during purchase:", error);
+        alert("An error occurred during the purchase.");
+      } finally {
+        setLoading((prevLoading) => ({ ...prevLoading, [key]: false }));
+      }
     } else {
       alert("Not enough coins");
     }
   };
 
   function formatNumberWithK(num) {
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1) + "k";
-    } else {
-      return num;
-    }
+    return num >= 1000 ? (num / 1000).toFixed(1) + "k" : num;
   }
 
   return (
@@ -220,24 +223,24 @@ const Shop = () => {
                     </button>
                   </div>
                   {disablePurchase && disablePurchase[item.key] ? (
-                    <button className={`purchase-disabled`}>
+                    <button className="purchase-disabled">
                       <Image
                         src={Coin}
                         alt="Coin"
                         height={24}
                         width={24}
-                        className="mr-1 "
+                        className="mr-1"
                       />{" "}
-                      {costs && costs[item.key]}
+                      {costs[item.key]}
                     </button>
                   ) : (
                     <button
                       className={`button-price`}
                       onClick={() => purchaseItem(item.key)}
-                      disabled={loading[item.key]} // Disable button while loading
+                      disabled={loading[item.key]}
                     >
                       {loading[item.key] ? (
-                        <div className="button-spinner"></div> // Show loader
+                        <div className="button-spinner"></div>
                       ) : (
                         <>
                           <Image
@@ -245,9 +248,9 @@ const Shop = () => {
                             alt="Coin"
                             height={24}
                             width={24}
-                            className="mr-1 "
+                            className="mr-1"
                           />{" "}
-                          {costs && costs[item.key]}
+                          {costs[item.key]}
                         </>
                       )}
                     </button>
