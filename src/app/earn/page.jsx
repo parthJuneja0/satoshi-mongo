@@ -258,7 +258,7 @@ const Earn = () => {
                 </div>
                 <div className="earn-task-details">
                   <p className="earn-task-title">
-                    Subscribe to Satoshi's Podcast
+                    Subscribe to Satoshi&apos;s Podcast
                   </p>
                   <div className="earn-task-reward">
                     <p className="earn-plus">+</p>
