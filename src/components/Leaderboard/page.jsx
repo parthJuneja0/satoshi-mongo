@@ -113,7 +113,7 @@ const Leaderboard = ({ toggleLeaderboard }) => {
 
         {/* List */}
         {topPlayers && (
-          <ul className="flex flex-col space-y-3 w-full">
+          <ul className="flex flex-col space-y-3 w-full right-0 left-0">
             {topPlayers.map((player, index) => (
               <li
                 key={index}
