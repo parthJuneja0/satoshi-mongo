@@ -36,7 +36,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 
 .mine-card-grid {
@@ -47,8 +47,8 @@
 }
 
 .mine-card {
-  height: 130px;
-  width: 170px;
+  height: 125px;
+  width: 165px;
   background: linear-gradient(135deg, #384356 0%, #2c2f36 100%);
   border-radius: 16px;
   padding: 10px;

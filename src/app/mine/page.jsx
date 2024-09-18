@@ -34,7 +34,7 @@ import orange from "@/assets/treesection/orange.png";
 import peach from "@/assets/treesection/peach.png";
 import pear from "@/assets/treesection/pear.png";
 import teak from "@/assets/treesection/teak.png";
-// import pomegranate from "@/assets/treesection/pomegranate.png";
+import pomegranate from "@/assets/treesection/pomegranate.png";
 // import avocado from "@/assets/treesection/avocado.png";
 // import bamboo from "@/assets/treesection/bamboo.png";
 // import dragon_fruit from "@/assets/treesection/dragon_fruit.png";
@@ -86,7 +86,7 @@ const treesImages = {
   "017": teak,
   "018": guava,
   "019": jackfruit,
-  // "020": vegi,
+  "020": pomegranate,
 };
 
 const toolsImages = {
@@ -239,7 +239,7 @@ const allCards = [
   {
     reqUtil: "fertilizer",
     cardId: "020",
-    title: "Vegi",
+    title: "pomegranate",
     price: 5,
     profitAmount: 480,
   },
