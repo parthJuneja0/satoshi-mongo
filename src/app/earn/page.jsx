@@ -60,7 +60,7 @@ const Earn = () => {
 
           {/* Latest Podcast section */}
           <a
-            href="https://youtube.com/@satoshipodcast?si=2KW461p8RwJ0txt7"
+            href="https://youtu.be/BftuWRaTUCE?feature=shared"
             target="_blank"
             rel="noopener noreferrer"
             className="earn-task-item"
@@ -101,7 +101,7 @@ const Earn = () => {
 
           {/* Satoshi TV section */}
           <a
-            href="https://youtu.be/Dj1mthvJ-5Y?si=Uno0u9MgmcfpiUsY"
+            href="https://youtu.be/3OQIEYeL22g?feature=shared"
             target="_blank"
             rel="noopener noreferrer"
             className="earn-task-item"
