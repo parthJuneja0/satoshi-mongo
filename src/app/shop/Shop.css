@@ -49,7 +49,7 @@
   justify-content: space-evenly;
   width: 100%;
   max-width: 600px;
-  margin-bottom: 11%; /*10 px updated*/
+  margin-bottom: 10px; /*10 px updated*/
 }
 
 .balance-item {
