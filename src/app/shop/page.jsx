@@ -79,6 +79,20 @@ const Shop = () => {
     },
   ];
 
+  const updateQuantity = (key, value) => { 
+    const parsedValue = parseInt(value, 10);
+  
+    if (isNaN(parsedValue) || parsedValue < 1) {
+      return;
+    }
+  
+    setQuantities((prevQuantities) => {
+      updateCosts(key, parsedValue);
+      return { ...prevQuantities, [key]: parsedValue };
+    });
+  };
+  
+  
   const increaseQuantity = (key) => {
     setQuantities((prevQuantities) => {
       const newQuantity = prevQuantities[key] + 1;
@@ -214,7 +228,9 @@ const Shop = () => {
                     >
                       -
                     </button>
-                    <span className="quantity">{quantities[item.key]}</span>
+                    <input type="number" value={quantities[item.key]}
+                    className="text-center" style={{width:"50px",color:"black"}}
+                    onChange={(e) => updateQuantity(item.key, e.target.value)} />
                     <button
                       className="quantity-btn increment-btn"
                       onClick={() => increaseQuantity(item.key)}

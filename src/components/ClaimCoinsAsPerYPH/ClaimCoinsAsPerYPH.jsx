@@ -7,6 +7,7 @@ const ClaimCoinsAsPerYPH = ({ coinProfit, setIsClaimAvailable }) => {
   const { userInfo, setUserInfo } = useContext(userDataContext);
   const { addCoins } = useContext(syncContext);
   const [loading, setLoading] = useState(false); 
+  const [loading1, setLoading1] = useState(false); 
 
   const grantReward = async () => {
     setLoading(true); 
@@ -21,6 +22,19 @@ const ClaimCoinsAsPerYPH = ({ coinProfit, setIsClaimAvailable }) => {
     }
   };
 
+  const cancelClaim = async () => {
+    setLoading1(true); 
+    try {
+      const response = await addCoins(userInfo.telegramId, 0);
+      setUserInfo(response);
+      setIsClaimAvailable(false);
+    } catch (error) {
+      console.error("Error while claiming coins:", error);
+    } finally {
+      setLoading1(false);
+    }
+  };
+
   function formatNumberWithK(num) {
     if (num >= 1000) {
       return (num / 1000).toFixed(1) + "k";
@@ -28,6 +42,7 @@ const ClaimCoinsAsPerYPH = ({ coinProfit, setIsClaimAvailable }) => {
       return num;
     }
   }
+ 
 
   return (
     <>
@@ -53,7 +68,13 @@ const ClaimCoinsAsPerYPH = ({ coinProfit, setIsClaimAvailable }) => {
               "Claim"
             )}
           </button>
-          <button className="cancel">Cancel</button>
+          <button
+           onClick={cancelClaim} className="cancel" disabled={loading1} >
+            {loading1 ? (
+              <ClipLoader color="#ffffff" size={18} /> // Loading spinner
+          ) : (
+            "Cancel"
+          )}</button>
         </div>
       </div>
     </>
