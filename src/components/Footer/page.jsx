@@ -106,7 +106,7 @@ const Footer = () => {
           key={index}
         >
           <div
-            className={`flex flex-col items-center text-center w-12 p-2 rounded-xl transition-all duration-200 cursor-pointer ${
+            className={`flex flex-col items-center text-center w-12 p-2 m-2 rounded-xl transition-all duration-200 cursor-pointer ${
               selectedPage === item.name
                 ? "bg-gray-700 text-white shadow-md shadow-yellow-500"
                 : "bg-gray-800 text-gray-500"

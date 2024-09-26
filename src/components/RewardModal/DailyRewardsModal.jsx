@@ -1,20 +1,21 @@
-import React, { useContext, useEffect, useState } from "react";
 // import { FaCheckCircle } from "react-icons/fa";
+import React, { useContext, useEffect, useState } from "react";
 import "./DailyRewardsModal.css";
 import Coin from "../../assets/coin.png";
 import Image from "next/image";
 import { userDataContext } from "@/context/userDataContext";
 import { transactionsContext } from "@/context/transactionsContext";
 import NotificationModal from "@/components/NotificationModal/NotificationModal";
+import ClipLoader from "react-spinners/ClipLoader";
+
 const DailyRewardsModal = ({ closeModal }) => {
   const { userInfo, setUserInfo, userRewards, setUserRewards } =
     useContext(userDataContext);
   const { claimDailyReward, resetDailyRewards } =
     useContext(transactionsContext);
 
-    // Define the array of rewards
-    const rewardsArray = [
-      { day: 1, reward: 1000 },
+  const rewardsArray = [
+    { day: 1, reward: 1000 },
     { day: 2, reward: 2500 },
     { day: 3, reward: 5000 },
     { day: 4, reward: 10000 },
@@ -22,22 +23,33 @@ const DailyRewardsModal = ({ closeModal }) => {
     { day: 6, reward: 100000 },
     { day: 7, reward: 500000 },
   ];
-  
+
   const [notificationTimestamp, setNotificationTimestamp] = useState(null);
   const [availableClaim, setAvailableClaim] = useState();
   const [notificationMessage, setNotificationMessage] = useState(""); // State to store the notification message
   const [showNotification, setShowNotification] = useState(false); // State to control modal visibility
+  const [loading, setLoading] = useState(false); 
+
   const handleClaimDailyReward = async () => {
     if (!userInfo) return;
-    const response = await claimDailyReward(
-      userInfo.telegramId,
-      availableClaim.day,
-      availableClaim.reward
-    );
-    setUserInfo(response.user);
-    setUserRewards(response.rewards);
-    setAvailableClaim(null);
+    setLoading(true);
+
+    try {
+      const response = await claimDailyReward(
+        userInfo.telegramId,
+        availableClaim.day,
+        availableClaim.reward
+      );
+      setUserInfo(response.user);
+      setUserRewards(response.rewards);
+      setAvailableClaim(null);
+    } catch (error) {
+      console.error("Error claiming daily reward:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
   const formatTime = (milliseconds) => {
     const totalSeconds = Math.floor(milliseconds / 1000);
     const hours = Math.floor(totalSeconds / 3600);
@@ -47,13 +59,11 @@ const DailyRewardsModal = ({ closeModal }) => {
 
   const handleRewardClick = (day) => {
     if (day !== availableClaim?.day) {
-      // Get the last claim timestamp and calculate time remaining
       const lastClaimedTime = userRewards.dailyRewards.lastClaimed.timestamp;
       const nextClaimTime = lastClaimedTime + 86400000; // 24 hours (in milliseconds) after last claimed
       const remainingTime = nextClaimTime - Date.now();
 
       if (remainingTime > 0) {
-        // Convert remaining time to hours and minutes
         const timeUntilNextClaim = formatTime(remainingTime);
         setNotificationMessage(
           `You can claim the next reward in ${timeUntilNextClaim}. Please come back later!`
@@ -67,6 +77,7 @@ const DailyRewardsModal = ({ closeModal }) => {
       }
     }
   };
+
   useEffect(() => {
     if (!userRewards) return;
 
@@ -76,14 +87,9 @@ const DailyRewardsModal = ({ closeModal }) => {
     const timeDifference =
       Date.now() - userRewards.dailyRewards.lastClaimed.timestamp;
 
-    // For debugging purposes
-    // const timeDifference = 864000;
-    // const timeDifference = 864000001;
-
     if (timeDifference < 86400000) return;
 
     if (userRewards.dailyRewards.lastClaimed.day == 7) {
-      // Revert rewards
       (async () => {
         await resetDailyRewards(userInfo.telegramId);
       })();
@@ -115,7 +121,6 @@ const DailyRewardsModal = ({ closeModal }) => {
                   ? "locked-day"
                   : ""
               }`}
-              // Add an onClick handler to check availability
               onClick={() => handleRewardClick(index + 1)}
             >
               <div className="reward-day-circle">
@@ -128,28 +133,20 @@ const DailyRewardsModal = ({ closeModal }) => {
                 />
                 <p className="daily-reward-amount">{rewardObj.reward}</p>
               </div>
-              {/* {userRewards.dailyRewards.rewards[`day${index + 1}`] && (
-                <FaCheckCircle className="daily-reward-checkmark" />
-              )} */}
             </div>
           ))}
         </div>
         {availableClaim && (
           <button
             className="reward-modalaction-button"
-            // disabled={!availableClaim}
-            onClick={() => {
-              handleClaimDailyReward();
-            }}
+            onClick={() => handleClaimDailyReward()}
+            disabled={loading} 
           >
-            {" "}
-            Claim
-            {/* {availableClaim
-            ? // &&
-              // availableClaim.day ===
-              //   Object.keys(userRewards.dailyRewards.rewards).length + 1
+            {loading ? (
+              <ClipLoader size={20} color="#fff" /> 
+            ) : (
               "Claim"
-            : "Come back tomorrow"} */}
+            )}
           </button>
         )}
       </div>

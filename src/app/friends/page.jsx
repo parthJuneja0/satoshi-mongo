@@ -12,15 +12,16 @@ import { MdContentCopy } from "react-icons/md";
 import { MdOutlineDone } from "react-icons/md";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { transactionsContext } from "@/context/transactionsContext";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const Friends = () => {
   const router = useRouter();
-  const { userWebData, setUserInfo, friends, setFriends } =
-    useContext(userDataContext);
+  const { userWebData, setUserInfo, friends, setFriends } = useContext(userDataContext);
   const { claimReferalReward } = useContext(transactionsContext);
 
   const [isCopied, setIsCopied] = React.useState(false);
   const [inviteLink, setInviteLink] = useState();
+  const [loading, setLoading] = useState({}); 
 
   const handleCopy = () => {
     setIsCopied(true);
@@ -44,13 +45,21 @@ const Friends = () => {
   };
 
   const handleClaim = async (userId) => {
-    const response = await claimReferalReward(
-      userWebData.userId,
-      userId,
-      userWebData.premium ? 250000 : 100000
-    );
-    setFriends(response.friends);
-    setUserInfo(response.user);
+    setLoading((prev) => ({ ...prev, [userId]: true })); 
+
+    try {
+      const response = await claimReferalReward(
+        userWebData.userId,
+        userId,
+        userWebData.premium ? 250000 : 100000
+      );
+      setFriends(response.friends);
+      setUserInfo(response.user);
+    } catch (error) {
+      console.error("Error claiming reward:", error);
+    } finally {
+      setLoading((prev) => ({ ...prev, [userId]: false })); 
+    }
   };
 
   return (
@@ -69,8 +78,7 @@ const Friends = () => {
               <div className="ml-2 text-sm flex-1">
                 <p className="text-base font-bold">Invite a Friend</p>
                 <div className="friends-coin-text text-yellow-400 flex items-center text-lg mt-2">
-                  + <Image src={Coin} alt="coin" width={20} height={20} loading="lazy"/>{" "}
-                  100k Coins for you 
+                  + <Image src={Coin} alt="coin" width={20} height={20} loading="lazy" /> 100k Coins for you 
                 </div>
               </div>
             </div>
@@ -81,8 +89,7 @@ const Friends = () => {
                   Invite a Friend with Telegram Premium
                 </p>
                 <div className="friends-coin-text text-yellow-400 flex items-center text-lg mt-2">
-                  + <Image src={Coin} alt="coin" width={20} height={20} loading="lazy"/>{" "}
-                  250k Coins for you 
+                  + <Image src={Coin} alt="coin" width={20} height={20} loading="lazy" /> 250k Coins for you 
                 </div>
               </div>
             </div>
@@ -128,11 +135,14 @@ const Friends = () => {
                     {!friend.claimed ? (
                       <button
                         className="friends-claim-button"
-                        onClick={() => {
-                          handleClaim(friend.userId);
-                        }}
+                        onClick={() => handleClaim(friend.userId)}
+                        disabled={loading[friend.userId]} 
                       >
-                        {userWebData.premium ? 250000 : 100000}
+                        {loading[friend.userId] ? (
+                          <ClipLoader size={20} color="#fff" />
+                        ) : (
+                          userWebData.premium ? 250000 : 100000
+                        )}
                       </button>
                     ) : (
                       <button className="friends-claimed-button">
@@ -152,3 +162,4 @@ const Friends = () => {
 };
 
 export default Friends;
+
